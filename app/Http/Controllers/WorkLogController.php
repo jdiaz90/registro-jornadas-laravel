@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use App\Models\WorkLog;
+use App\Exports\YearlyWorkLogsExport;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Auth;
 
 class WorkLogController extends Controller
@@ -72,5 +74,11 @@ class WorkLogController extends Controller
         ]);
 
         return back()->with('success', 'Salida registrada correctamente.');
+    }
+
+    public function exportYearlyReport($year)
+    {
+        // Se descarga el archivo, por ejemplo, "work_logs_2025.xlsx"
+        return Excel::download(new YearlyWorkLogsExport($year), 'work_logs_' . $year . '.xlsx');
     }
 }

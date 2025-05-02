@@ -36,6 +36,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/work-logs/check-out', [WorkLogController::class, 'checkOut'])->name('work_logs.check_out');
 
     Route::get('/calendar', [CalendarController::class, 'index'])->name('calendar.index');
+
+    Route::get('/work-logs/export/{year}', [WorkLogController::class, 'exportYearlyReport'])
+         ->name('worklogs.export.yearly');
 });
 
 require __DIR__.'/auth.php';

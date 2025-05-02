@@ -71,6 +71,18 @@
                     Ver Calendario
                 </a>
             </div>
+
+            <div class="bg-white dark:bg-gray-700 shadow rounded-lg p-6 text-center">
+                <h3 class="text-xl font-semibold mb-2">Exportar Informe</h3>
+                <p class="text-gray-600 dark:text-gray-300">
+                    Descarga tus registros de entrada y salida en formato Excel.
+                </p>
+                <a href="{{ route('worklogs.export.yearly', ['year' => 2025]) }}" class="mt-4 inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded">
+                    Descargar Excel
+                </a>
+            </div>
+
+
             </div>
         </div>
     </div>
