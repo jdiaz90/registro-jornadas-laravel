@@ -9,7 +9,6 @@ use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
-use App\Http\Controllers\ProfileController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -58,18 +57,5 @@ Route::middleware('auth')->group(function () {
 
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');
-
-    // Nueva ruta para editar el perfil
-    Route::get('profile/edit', [ProfileController::class, 'edit'])
-        ->name('profile.edit');
-
-    // (Opcional) Ruta para actualizar el perfil
-    Route::put('profile', [ProfileController::class, 'update'])
-        ->name('profile.update');
-
-    // Ruta para eliminar el perfil (si es que quieres permitirlo)
-    Route::delete('profile', [ProfileController::class, 'destroy'])
-        ->name('profile.destroy');
-
         
 });
