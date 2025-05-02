@@ -12,12 +12,27 @@ class AdminController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::all();
+        // Inicia la consulta a partir del modelo User.
+        $query = User::query();
+        
+        // Si se proporciona un término de búsqueda, se filtra por nombre o correo.
+        if ($request->filled('search')) {
+            $searchTerm = $request->input('search');
+            $query->where(function ($q) use ($searchTerm) {
+                $q->where('name', 'LIKE', '%' . $searchTerm . '%')
+                  ->orWhere('email', 'LIKE', '%' . $searchTerm . '%');
+            });
+        }
+    
+        // Pagina el resultado mostrando 25 usuarios por página y conserva los parámetros de la URL
+        $users = $query->paginate(25)->withQueryString();
+    
+        // Retorna la vista pasando la variable de usuarios
         return view('admin.users.index', compact('users'));
     }
-
+    
     /**
      * Muestra la ficha de usuario junto con el historial de registros (filtrable por mes y año).
      *
