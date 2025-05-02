@@ -19,6 +19,10 @@
                     <x-nav-link :href="route('work_logs.index')" :active="request()->routeIs('work_logs.*')">
                         {{ __('Work Logs') }}
                     </x-nav-link>
+                    <!-- Nueva opción Calendario -->
+                    <x-nav-link :href="route('calendar.index')" :active="request()->routeIs('calendar.*')">
+                        {{ __('Calendario') }}
+                    </x-nav-link>
                 </div>
             </div>
 
@@ -73,9 +77,13 @@
             <x-responsive-nav-link :href="route('work_logs.index')" :active="request()->routeIs('work_logs.*')">
                 {{ __('Work Logs') }}
             </x-responsive-nav-link>
+            <!-- Nueva opción Calendario en menú responsive -->
+            <x-responsive-nav-link :href="route('calendar.index')" :active="request()->routeIs('calendar.*')">
+                {{ __('Calendario') }}
+            </x-responsive-nav-link>
         </div>
 
-        <!-- Opciones de usuario, en móvil -->
+        <!-- Opciones de usuario en móvil -->
         <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
             <div class="px-4">
                 <div class="font-medium text-base text-gray-800 dark:text-gray-200">{{ Auth::user()->name }}</div>
