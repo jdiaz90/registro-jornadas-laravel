@@ -13,27 +13,27 @@ class WorkLogController extends Controller
 {
     // Mostrar el estado actual del usuario o los registros anteriores
     public function index(Request $request)
-{
-    // Inicia la consulta para el usuario autenticado.
-    $query = WorkLog::where('user_id', Auth::id());
+    {
+        // Inicia la consulta para el usuario autenticado.
+        $query = WorkLog::where('user_id', Auth::id());
 
-    // Si se ingresa un año, filtra por ese año
-    if ($request->filled('year')) {
-        $query->whereYear('check_in', $request->year);
-        
-        // Si adicionalmente se ha seleccionado un mes, filtra por ese mes
-        if ($request->filled('month')) {
-            $query->whereMonth('check_in', $request->month);
+        // Si se ingresa un año, filtra por ese año
+        if ($request->filled('year')) {
+            $query->whereYear('check_in', $request->year);
+            
+            // Si adicionalmente se ha seleccionado un mes, filtra por ese mes
+            if ($request->filled('month')) {
+                $query->whereMonth('check_in', $request->month);
+            }
         }
+
+        // Ordena por fecha de creación descendente y aplica la paginación
+        $logs = $query->orderBy('check_in', 'desc')
+                    ->paginate(30)
+                    ->withQueryString();
+
+        return view('work_logs.index', compact('logs'));
     }
-
-    // Ordena por fecha de creación descendente y aplica la paginación
-    $logs = $query->orderBy('created_at', 'desc')
-                ->paginate(30)
-                ->withQueryString();
-
-    return view('work_logs.index', compact('logs'));
-}
 
     
 

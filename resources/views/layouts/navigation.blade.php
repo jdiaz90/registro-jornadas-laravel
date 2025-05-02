@@ -23,6 +23,13 @@
                     <x-nav-link :href="route('calendar.index')" :active="request()->routeIs('calendar.*')">
                         {{ __('Calendario') }}
                     </x-nav-link>
+                    
+                    <!-- Enlace exclusivo para administradores -->
+                    @if(Auth::check() && Auth::user()->role === 'admin')
+                        <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
+                            {{ __('Admin Dashboard') }}
+                        </x-nav-link>
+                    @endif
                 </div>
             </div>
 
@@ -81,6 +88,13 @@
             <x-responsive-nav-link :href="route('calendar.index')" :active="request()->routeIs('calendar.*')">
                 {{ __('Calendario') }}
             </x-responsive-nav-link>
+            
+            <!-- Enlace Admin solo si el usuario tiene rol admin -->
+            @if(Auth::check() && Auth::user()->role === 'admin')
+                <x-responsive-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
+                    {{ __('Admin Dashboard') }}
+                </x-responsive-nav-link>
+            @endif
         </div>
 
         <!-- Opciones de usuario en móvil -->
