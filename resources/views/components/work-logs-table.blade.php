@@ -57,7 +57,12 @@
             <tbody class="bg-white dark:bg-gray-700 divide-y divide-gray-200 dark:divide-gray-600">
                 @forelse($logs as $log)
                     <tr>
-                        <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">{{ $log->id }}</td>
+                        <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
+                            <!-- Hipervínculo: Al hacer clic se redirige a la ruta de detalle -->
+                            <a href="{{ route('work_logs.show', $log->id) }}" class="text-blue-600 hover:underline">
+                                {{ $log->id }}
+                            </a>
+                        </td>
                         <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">{{ $log->check_in }}</td>
                         <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">{{ $log->check_out ?? 'En curso' }}</td>
                         <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">{{ $log->hash ?? 'Pendiente' }}</td>
