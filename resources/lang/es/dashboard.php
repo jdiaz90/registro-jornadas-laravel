@@ -6,7 +6,7 @@ return [
 
     // Sección de bienvenida
     'welcome' => [
-        'greeting'    => 'Bienvenido, :name!',
+        'greeting'    => '¡Bienvenido, :name!',
         'description' => 'Explora tu actividad y gestiona tus registros desde aquí.',
     ],
 

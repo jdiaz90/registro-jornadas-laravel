@@ -6,10 +6,6 @@
         </h1>
     </x-slot>
 
-    <!-- Mensajes flash generales (éxito o error) -->
-    <x-alert type="success" />
-    <x-alert type="error" />
-
     <!-- Contenido principal -->
     <div class="py-6">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">

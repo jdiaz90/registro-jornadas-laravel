@@ -39,13 +39,13 @@ class WorkLogController extends Controller
     // Registrar la entrada
     public function checkIn(Request $request)
     {
-        // Verificamos que el usuario no tenga un registro en curso
+        // Verificamos que el usuario no tenga un registro en curso.
         $openLog = WorkLog::where('user_id', Auth::id())
             ->whereNull('check_out')
             ->first();
 
         if ($openLog) {
-            return back()->with('error', 'Ya has registrado una entrada y no has completado la salida.');
+            return back()->with('error', __('work_logs.messages.check_in.already_open'));
         }
 
         WorkLog::create([
@@ -53,29 +53,29 @@ class WorkLogController extends Controller
             'check_in' => Carbon::now(),
         ]);
 
-        return back()->with('success', 'Entrada registrada correctamente.');
+        return back()->with('success', __('work_logs.messages.check_in.success'));
     }
 
     // Registrar la salida
     public function checkOut(Request $request)
     {
-        // Encontrar el registro en curso
+        // Encontrar el registro en curso.
         $log = WorkLog::where('user_id', Auth::id())
             ->whereNull('check_out')
             ->first();
 
         if (!$log) {
-            return back()->with('error', 'No existe un registro de entrada abierta.');
+            return back()->with('error', __('work_logs.messages.check_out.no_open'));
         }
 
         $log->update([
             'check_out' => Carbon::now(),
         ]);
 
-        return back()->with('success', 'Salida registrada correctamente.');
+        return back()->with('success', __('work_logs.messages.check_out.success'));
     }
 
-    // Muestra el formulario para que el administrador edite el registro
+    // Muestra el formulario para que el administrador edite el registro.
     public function edit($id)
     {
         $workLog = WorkLog::findOrFail($id);
@@ -84,13 +84,12 @@ class WorkLogController extends Controller
 
     public function show($id)
     {
-        // Obtenemos el registro junto con la relación "user"
+        // Obtenemos el registro junto con la relación "user".
         $workLog = WorkLog::with('user')->findOrFail($id);
     
-        // Comprobamos: si el usuario autenticado no es admin (role !== 'admin')
-        // y además no es el dueño del registro, lanzamos error 403.
+        // Si el usuario autenticado no es admin y además no es el dueño del registro, lanzamos error 403.
         if (Auth::user()->role !== 'admin' && Auth::id() !== $workLog->user_id) {
-            abort(403, 'No está autorizado a ver este registro.');
+            abort(403, __('work_logs.messages.authorization.unauthorized'));
         }
     
         $audits = WorkLogAudit::where('work_log_id', $workLog->id)
@@ -100,10 +99,7 @@ class WorkLogController extends Controller
         return view('work_logs.show', compact('workLog', 'audits'));
     }
     
-
-    
-
-    // Procesa la actualización realizada por el administrador
+    // Procesa la actualización realizada por el administrador.
     public function update(Request $request, $id)
     {
         // Validamos que 'check_in' y 'check_out' sean requeridos, sean fechas y además,
@@ -115,41 +111,41 @@ class WorkLogController extends Controller
             'check_in.before_or_equal' => 'La fecha de entrada no puede ser posterior a la fecha de salida.',
         ]);
 
-        // Buscamos el registro
+        // Buscamos el registro.
         $workLog = WorkLog::findOrFail($id);
 
-        // Normalizamos los valores existentes con Carbon (formato "Y-m-d\TH:i") para compararlos
-        $existingCheckIn = $workLog->check_in ? \Carbon\Carbon::parse($workLog->check_in)->format('Y-m-d\TH:i') : null;
-        $existingCheckOut = $workLog->check_out ? \Carbon\Carbon::parse($workLog->check_out)->format('Y-m-d\TH:i') : null;
+        // Normalizamos los valores existentes con Carbon (formato "Y-m-d\\TH:i") para compararlos.
+        $existingCheckIn = $workLog->check_in ? Carbon::parse($workLog->check_in)->format('Y-m-d\TH:i') : null;
+        $existingCheckOut = $workLog->check_out ? Carbon::parse($workLog->check_out)->format('Y-m-d\TH:i') : null;
 
-        // Obtenemos los nuevos valores (ya validados)
+        // Obtenemos los nuevos valores (ya validados).
         $inputCheckIn = $validated['check_in'];
         $inputCheckOut = $validated['check_out'];
 
-        // Si los datos no han cambiado, se retorna un mensaje de error
+        // Si los datos no han cambiado, se retorna un mensaje de error.
         if ($existingCheckIn === $inputCheckIn && $existingCheckOut === $inputCheckOut) {
             return redirect()->route('admin.work_logs.edit', $id)
-                ->with('error', 'No se han realizado cambios en el registro.');
+                ->with('error', __('work_logs.messages.update.no_changes'));
         }
 
-        // Asignamos los nuevos valores y generamos el nuevo hash mediante el método del modelo
+        // Asignamos los nuevos valores y generamos el nuevo hash mediante el método del modelo.
         $workLog->fill($validated);
         $workLog->hash = $workLog->generateHash();
 
-        // Intentamos guardar, y en caso de error, capturamos la excepción y retornamos un mensaje
+        // Intentamos guardar y, en caso de error, capturamos la excepción y retornamos un mensaje.
         try {
             $workLog->save();
         } catch (\Exception $e) {
             return redirect()->route('admin.work_logs.edit', $id)
-                ->with('error', 'Error al guardar los cambios: ' . $e->getMessage());
+                ->with('error', __('work_logs.messages.update.save_error', ['error' => $e->getMessage()]));
         }
 
-        // Redirigimos a la vista de detalle del registro con un mensaje de éxito
+        // Redirigimos a la vista de detalle del registro con un mensaje de éxito.
         return redirect()->route('work_logs.show', $workLog->id)
-            ->with('success', 'Registro actualizado y auditado correctamente.');
+            ->with('success', __('work_logs.messages.update.success'));
     }
 
-    // Método para descargar reporte anual
+    // Método para descargar reporte anual.
     public function exportYearlyReport($year)
     {
         return Excel::download(new YearlyWorkLogsExport($year), 'work_logs_' . $year . '.xlsx');

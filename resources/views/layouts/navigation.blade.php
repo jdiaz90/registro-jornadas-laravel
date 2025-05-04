@@ -33,8 +33,35 @@
                 </div>
             </div>
 
-            <!-- Derecha: Dropdown de usuario -->
-            <div class="hidden sm:flex sm:items-center sm:ml-6">
+            <!-- Derecha: Dropdowns de idioma y usuario -->
+            <div class="hidden sm:flex sm:items-center sm:ml-6 space-x-4">
+                <!-- Dropdown para la selección de idioma -->
+                <x-dropdown align="right" width="48">
+                    <!-- Trigger -->
+                    <x-slot name="trigger">
+                        <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition duration-150 ease-in-out">
+                            <div>{{ strtoupper(App::getLocale()) }}</div>
+                            <svg class="ml-1 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7l3-3 3 3m0 6l-3 3-3-3" />
+                            </svg>
+                        </button>
+                    </x-slot>
+                    
+                    <!-- Dropdown Content -->
+                    <x-slot name="content">
+                        <x-dropdown-link :href="route('locale.change', ['locale' => 'es'])">
+                            Español
+                        </x-dropdown-link>
+                        <x-dropdown-link :href="route('locale.change', ['locale' => 'en'])">
+                            English
+                        </x-dropdown-link>
+                        <x-dropdown-link :href="route('locale.change', ['locale' => 'gl'])">
+                            Galego
+                        </x-dropdown-link>
+                    </x-slot>
+                </x-dropdown>
+
+                <!-- Dropdown de usuario -->
                 <x-dropdown align="right" width="48">
                     <!-- Trigger -->
                     <x-slot name="trigger">

@@ -9,4 +9,5 @@ return [
         'profile'         => 'Perfil',
         'log_out'         => 'Pechar sesión',
     ],
+    'locale_changed' => 'Cambiouse o idioma a: :locale',
 ];

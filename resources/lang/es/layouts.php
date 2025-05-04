@@ -9,4 +9,6 @@ return [
         'profile'         => 'Perfil',
         'log_out'         => 'Cerrar sesión',
     ],
+    // Mensaje para el cambio de idioma (puedes ubicarlo al final o en otra sección)
+    'locale_changed' => 'Idioma cambiado a: :locale',
 ];

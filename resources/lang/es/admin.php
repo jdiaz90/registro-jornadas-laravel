@@ -4,7 +4,7 @@ return [
 
     // Textos generales del panel de administración
     'admin_panel'        => 'Panel de Administración',
-    'welcome'            => 'Bienvenido, Administrador :name!',
+    'welcome'            => '¡Bienvenido, Administrador :name!',
     'description'        => 'Accede al panel para gestionar usuarios, revisar registros y obtener estadísticas del sistema.',
 
     // Tarjetas/datos del dashboard

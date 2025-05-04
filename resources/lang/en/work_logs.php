@@ -1,6 +1,7 @@
 <?php
 
 return [
+    // Textos de las vistas del módulo Work Logs
     'edit' => [
         'header'             => 'Edit Record #:id',
         'check_in_label'     => 'Check-in',
@@ -28,7 +29,7 @@ return [
         'header' => 'Record Detail #:id',
     ],
 
-    // Section for verify.blade.php
+    // Sección para la vista verify.blade.php
     'verify' => [
         'header' => 'Verify Record',
         
@@ -53,5 +54,31 @@ return [
         ],
     ],
 
-    // Other groups or keys...
+    // Mensajes usados, por ejemplo, en el controlador
+    'messages' => [
+        // Mensajes relacionados con el registro de entrada
+        'check_in' => [
+            'already_open' => 'You have already registered a check-in and have not completed check-out.',
+            'success'      => 'Check-in registered successfully.',
+        ],
+
+        // Mensajes relacionados con el registro de salida
+        'check_out' => [
+            'no_open' => 'There is no open check-in record.',
+            'success' => 'Check-out registered successfully.',
+        ],
+
+        // Mensajes relacionados con la actualización del registro
+        'update' => [
+            'no_changes' => 'No changes have been made to the record.',
+            // Usa el placeholder :error para inyectar el mensaje específico de la excepción
+            'save_error' => 'Error saving changes: :error',
+            'success'    => 'Record updated and audited successfully.',
+        ],
+
+        // Mensaje para el control de autorización (por ejemplo, en el método show)
+        'authorization' => [
+            'unauthorized' => 'You are not authorized to view this record.',
+        ],
+    ],
 ];

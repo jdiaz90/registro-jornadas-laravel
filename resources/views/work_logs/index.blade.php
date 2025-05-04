@@ -9,10 +9,6 @@
     <div class="py-12">
         <!-- Contenedor principal -->
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-8">
-            
-            <!-- Mensajes flash (éxito o error) -->
-            <x-alert type="success" />
-            <x-alert type="error" />
 
             <!-- Contenedor para las acciones de registrar entrada y salida -->
             <div class="mb-8">

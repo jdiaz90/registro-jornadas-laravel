@@ -8,10 +8,6 @@
         </div>
     </x-slot>
 
-    <!-- Mensajes flash (éxito o error) -->
-    <x-alert type="success" />
-    <x-alert type="error" />
-
     <!-- Contenido principal -->
     <div class="py-6">
         <!-- Incluir el componente reutilizable -->

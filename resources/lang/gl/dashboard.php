@@ -4,7 +4,7 @@ return [
     'header' => 'Taboleiro',
 
     'welcome' => [
-        'greeting'    => 'Benvido, :name!',
+        'greeting'    => '¡Benvido, :name!',
         'description' => 'Explora a túa actividade e xestiona os teus rexistros dende aquí.',
     ],
 

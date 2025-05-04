@@ -1,6 +1,7 @@
 <?php
 
 return [
+    // Sección de vistas
     'edit' => [
         'header'             => 'Editar Registro #:id',
         'check_in_label'     => 'Entrada',
@@ -53,5 +54,31 @@ return [
         ],
     ],
 
-    // Otras secciones que ya tengas...
+    // Otros mensajes (usados en el controlador, por ejemplo)
+    'messages' => [
+        // Mensajes relacionados con el registro de entrada
+        'check_in' => [
+            'already_open' => 'Ya has registrado una entrada y no has completado la salida.',
+            'success'      => 'Entrada registrada correctamente.',
+        ],
+
+        // Mensajes relacionados con el registro de salida
+        'check_out' => [
+            'no_open' => 'No existe un registro de entrada abierta.',
+            'success' => 'Salida registrada correctamente.',
+        ],
+
+        // Mensajes relacionados con la actualización del registro
+        'update' => [
+            'no_changes' => 'No se han realizado cambios en el registro.',
+            // Se usa el placeholder :error para inyectar el mensaje específico de la excepción
+            'save_error' => 'Error al guardar los cambios: :error',
+            'success'    => 'Registro actualizado y auditado correctamente.',
+        ],
+
+        // Mensaje para el control de autorización (por ejemplo, en el método show)
+        'authorization' => [
+            'unauthorized' => 'No está autorizado a ver este registro.',
+        ],
+    ],
 ];

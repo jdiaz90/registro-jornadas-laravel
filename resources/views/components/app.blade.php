@@ -29,6 +29,9 @@
 
             <!-- Page Content -->
             <main>
+                <!-- Mensajes flash generales (éxito o error) -->
+                <x-alert type="success" />
+                <x-alert type="error" />
                 {{ $slot }}
             </main>
         </div>
