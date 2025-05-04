@@ -14,20 +14,20 @@
                 <!-- Enlaces de navegación (ocultos en móvil) -->
                 <div class="hidden sm:flex sm:space-x-8 sm:ml-10">
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
+                        {{ __('layouts.navigation.dashboard') }}
                     </x-nav-link>
                     <x-nav-link :href="route('work_logs.index')" :active="request()->routeIs('work_logs.*')">
-                        {{ __('Work Logs') }}
+                        {{ __('layouts.navigation.work_logs') }}
                     </x-nav-link>
                     <!-- Nueva opción Calendario -->
                     <x-nav-link :href="route('calendar.index')" :active="request()->routeIs('calendar.*')">
-                        {{ __('Calendario') }}
+                        {{ __('layouts.navigation.calendario') }}
                     </x-nav-link>
                     
                     <!-- Enlace exclusivo para administradores -->
                     @if(Auth::check() && Auth::user()->role === 'admin')
                         <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
-                            {{ __('Admin Dashboard') }}
+                            {{ __('layouts.navigation.admin_dashboard') }}
                         </x-nav-link>
                     @endif
                 </div>
@@ -49,13 +49,13 @@
                     <!-- Dropdown Content -->
                     <x-slot name="content">
                         <x-dropdown-link :href="route('profile.edit')">
-                            {{ __('Profile') }}
+                            {{ __('layouts.navigation.profile') }}
                         </x-dropdown-link>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <x-dropdown-link :href="route('logout')"
                                     onclick="event.preventDefault(); this.closest('form').submit();">
-                                {{ __('Log Out') }}
+                                {{ __('layouts.navigation.log_out') }}
                             </x-dropdown-link>
                         </form>
                     </x-slot>
@@ -79,20 +79,20 @@
         <!-- Enlaces primarios -->
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                {{ __('Dashboard') }}
+                {{ __('layouts.navigation.dashboard') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('work_logs.index')" :active="request()->routeIs('work_logs.*')">
-                {{ __('Work Logs') }}
+                {{ __('layouts.navigation.work_logs') }}
             </x-responsive-nav-link>
             <!-- Nueva opción Calendario en menú responsive -->
             <x-responsive-nav-link :href="route('calendar.index')" :active="request()->routeIs('calendar.*')">
-                {{ __('Calendario') }}
+                {{ __('layouts.navigation.calendario') }}
             </x-responsive-nav-link>
             
             <!-- Enlace Admin solo si el usuario tiene rol admin -->
             @if(Auth::check() && Auth::user()->role === 'admin')
                 <x-responsive-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
-                    {{ __('Admin Dashboard') }}
+                    {{ __('layouts.navigation.admin_dashboard') }}
                 </x-responsive-nav-link>
             @endif
         </div>
@@ -105,13 +105,13 @@
             </div>
             <div class="mt-3 space-y-1">
                 <x-responsive-nav-link :href="route('profile.edit')">
-                    {{ __('Profile') }}
+                    {{ __('layouts.navigation.profile') }}
                 </x-responsive-nav-link>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <x-responsive-nav-link :href="route('logout')"
                                             onclick="event.preventDefault(); this.closest('form').submit();">
-                        {{ __('Log Out') }}
+                        {{ __('layouts.navigation.log_out') }}
                     </x-responsive-nav-link>
                 </form>
             </div>

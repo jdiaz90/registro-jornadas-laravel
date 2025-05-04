@@ -1,21 +1,22 @@
 <x-app-layout>
-    <!-- Slot para el header -->
+    <!-- Slot para el encabezado -->
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Dashboard') }}
+            {{ __('dashboard.header') }}
         </h2>
     </x-slot>
 
     <div class="py-12">
-        <!-- Contenedor central con espaciamiento vertical entre secciones -->
+        <!-- Contenedor central con espacio vertical entre secciones -->
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-8">
+
             <!-- Sección de Bienvenida -->
             <div class="bg-white dark:bg-gray-700 shadow rounded-lg p-6">
                 <h3 class="text-2xl font-semibold text-gray-900 dark:text-gray-100">
-                    Bienvenido, {{ Auth::user()->name }}!
+                    {{ __('dashboard.welcome.greeting', ['name' => Auth::user()->name]) }}
                 </h3>
                 <p class="mt-2 text-gray-600 dark:text-gray-300">
-                    Explora tu actividad y gestiona tus registros desde aquí.
+                    {{ __('dashboard.welcome.description') }}
                 </p>
             </div>
 
@@ -23,78 +24,96 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <!-- Tarjeta de Mis Work Logs -->
                 <div class="bg-white dark:bg-gray-700 shadow rounded-lg p-6 text-center">
-                    <h3 class="text-xl font-semibold mb-2">Mis Work Logs</h3>
+                    <h3 class="text-xl font-semibold mb-2">
+                        {{ __('dashboard.cards.work_logs.title') }}
+                    </h3>
                     <p class="text-gray-600 dark:text-gray-300">
-                        Revisa y gestiona tus registros de entrada y salida.
+                        {{ __('dashboard.cards.work_logs.description') }}
                     </p>
-                    <a href="{{ route('work_logs.index') }}" class="mt-4 inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded">
-                        Ver Work Logs
+                    <a href="{{ route('work_logs.index') }}"
+                       class="mt-4 inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded">
+                        {{ __('dashboard.cards.work_logs.button') }}
                     </a>
-                    <!-- Contador dinámico (asegúrate de que $logCount se pase a la vista) -->
+                    <!-- Contador dinámico -->
                     <div class="mt-4">
                         <span class="text-xl font-bold text-gray-900 dark:text-gray-100">{{ $logCount }}</span>
-                        <span class="text-sm text-gray-600 dark:text-gray-300"> Logs</span>
+                        <span class="text-sm text-gray-600 dark:text-gray-300">
+                            {{ __('dashboard.cards.work_logs.count_label') }}
+                        </span>
                     </div>
                 </div>
 
                 <!-- Tarjeta de Mi Perfil -->
                 <div class="bg-white dark:bg-gray-700 shadow rounded-lg p-6 text-center">
-                    <h3 class="text-xl font-semibold mb-2">Mi Perfil</h3>
+                    <h3 class="text-xl font-semibold mb-2">
+                        {{ __('dashboard.cards.profile.title') }}
+                    </h3>
                     <p class="text-gray-600 dark:text-gray-300">
-                        Actualiza tus datos personales y configura tu cuenta.
+                        {{ __('dashboard.cards.profile.description') }}
                     </p>
-                    <a href="{{ route('profile.edit') }}" class="mt-4 inline-block bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded">
-                        Editar Perfil
+                    <a href="{{ route('profile.edit') }}"
+                       class="mt-4 inline-block bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded">
+                        {{ __('dashboard.cards.profile.button') }}
                     </a>
                 </div>
 
-                <!-- Tarjeta de Estadísticas (opcional) -->
+                <!-- Tarjeta de Estadísticas -->
                 <div class="bg-white dark:bg-gray-700 shadow rounded-lg p-6 text-center">
-                    <h3 class="text-xl font-semibold mb-2">Estadísticas</h3>
+                    <h3 class="text-xl font-semibold mb-2">
+                        {{ __('dashboard.cards.statistics.title') }}
+                    </h3>
                     <p class="text-gray-600 dark:text-gray-300">
-                        Aquí podrías mostrar datos relevantes, como total de horas registradas o indicadores de actividad.
+                        {{ __('dashboard.cards.statistics.description') }}
                     </p>
-                    <!-- Ejemplo de dato adicional (ajusta según lo que necesites) -->
                     <div class="mt-4">
                         <span class="text-2xl font-bold text-gray-900 dark:text-gray-100">0</span>
-                        <span class="text-sm text-gray-600 dark:text-gray-300"> Horas Registradas</span>
+                        <span class="text-sm text-gray-600 dark:text-gray-300">
+                            {{ __('dashboard.cards.statistics.data_counter', ['count' => 0]) }}
+                        </span>
                     </div>
                 </div>
 
                 <!-- Tarjeta de Calendario -->
                 <div class="bg-white dark:bg-gray-700 shadow rounded-lg p-6 text-center">
-                    <h3 class="text-xl font-semibold mb-2">Calendario</h3>
+                    <h3 class="text-xl font-semibold mb-2">
+                        {{ __('dashboard.cards.calendar.title') }}
+                    </h3>
                     <p class="text-gray-600 dark:text-gray-300">
-                        Visualiza tu calendario anual y consulta los registros día a día.
+                        {{ __('dashboard.cards.calendar.description') }}
                     </p>
-                    <a href="{{ route('calendar.index') }}" class="mt-4 inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded">
-                        Ver Calendario
+                    <a href="{{ route('calendar.index') }}"
+                       class="mt-4 inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded">
+                        {{ __('dashboard.cards.calendar.button') }}
                     </a>
                 </div>
 
                 <!-- Tarjeta de Exportar Informe -->
                 <div class="bg-white dark:bg-gray-700 shadow rounded-lg p-6 text-center">
-                    <h3 class="text-xl font-semibold mb-2">Exportar Informe</h3>
+                    <h3 class="text-xl font-semibold mb-2">
+                        {{ __('dashboard.cards.export_report.title') }}
+                    </h3>
                     <p class="text-gray-600 dark:text-gray-300">
-                        Descarga tus registros de entrada y salida en formato Excel.
+                        {{ __('dashboard.cards.export_report.description') }}
                     </p>
-                    <a href="{{ route('worklogs.export.yearly', ['year' => 2025]) }}" class="mt-4 inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded">
-                        Descargar Excel
+                    <a href="{{ route('worklogs.export.yearly', ['year' => now()->year]) }}"
+                       class="mt-4 inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded">
+                        {{ __('dashboard.cards.export_report.button') }}
                     </a>
                 </div>
 
-                <!-- Nueva Tarjeta: Verificar Registro -->
+                <!-- Tarjeta de Verificar Registro -->
                 <div class="bg-white dark:bg-gray-700 shadow rounded-lg p-6 text-center">
-                    <h3 class="text-xl font-semibold mb-2">Verificar Registro</h3>
+                    <h3 class="text-xl font-semibold mb-2">
+                        {{ __('dashboard.cards.verify_record.title') }}
+                    </h3>
                     <p class="text-gray-600 dark:text-gray-300">
-                        Verifica la integridad de tus registros ingresando el código hash.
+                        {{ __('dashboard.cards.verify_record.description') }}
                     </p>
                     <a href="{{ route('work_logs.verify') }}"
-                    class="mt-4 inline-block bg-yellow-500 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded">
-                        Verificar Registro
+                       class="mt-4 inline-block bg-yellow-500 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded">
+                        {{ __('dashboard.cards.verify_record.button') }}
                     </a>
                 </div>
-
             </div>
         </div>
     </div>

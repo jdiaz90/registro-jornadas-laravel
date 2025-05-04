@@ -1,7 +1,7 @@
 <x-app-layout>
   <x-slot name="header">
       <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-          {{ __('Calendario del Año') }} {{ $year }}
+          {{ __('calendar.header', ['year' => $year]) }}
       </h2>
   </x-slot>
   
@@ -10,10 +10,10 @@
           <!-- Formulario para cambiar de año -->
           <div class="bg-white dark:bg-gray-700 shadow rounded-lg p-4">
               <form action="{{ route('calendar.index') }}" method="GET" class="flex items-center gap-4">
-                  <label class="text-gray-700 dark:text-gray-300">Año:</label>
+                  <label class="text-gray-700 dark:text-gray-300">{{ __('calendar.form.year_label') }}</label>
                   <input type="number" name="year" value="{{ $year }}" min="2000" max="2100" class="border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                   <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded">
-                      Cambiar
+                      {{ __('calendar.form.submit') }}
                   </button>
               </form>
           </div>
@@ -36,13 +36,13 @@
                       <table class="w-full text-center border-collapse text-xs">
                           <thead>
                               <tr>
-                                  <th class="py-1 text-gray-600 dark:text-gray-300">Lun</th>
-                                  <th class="py-1 text-gray-600 dark:text-gray-300">Mar</th>
-                                  <th class="py-1 text-gray-600 dark:text-gray-300">Mié</th>
-                                  <th class="py-1 text-gray-600 dark:text-gray-300">Jue</th>
-                                  <th class="py-1 text-gray-600 dark:text-gray-300">Vie</th>
-                                  <th class="py-1 text-gray-600 dark:text-gray-300">Sáb</th>
-                                  <th class="py-1 text-gray-600 dark:text-gray-300">Dom</th>
+                                  <th class="py-1 text-gray-600 dark:text-gray-300">{{ __('calendar.days.mon') }}</th>
+                                  <th class="py-1 text-gray-600 dark:text-gray-300">{{ __('calendar.days.tue') }}</th>
+                                  <th class="py-1 text-gray-600 dark:text-gray-300">{{ __('calendar.days.wed') }}</th>
+                                  <th class="py-1 text-gray-600 dark:text-gray-300">{{ __('calendar.days.thu') }}</th>
+                                  <th class="py-1 text-gray-600 dark:text-gray-300">{{ __('calendar.days.fri') }}</th>
+                                  <th class="py-1 text-gray-600 dark:text-gray-300">{{ __('calendar.days.sat') }}</th>
+                                  <th class="py-1 text-gray-600 dark:text-gray-300">{{ __('calendar.days.sun') }}</th>
                               </tr>
                           </thead>
                           <tbody>
@@ -72,8 +72,11 @@
                                           @if($dayLogs->isNotEmpty())
                                               <div class="calendar-tooltip absolute left-0 bottom-full mb-1 w-32 bg-gray-800 text-white text-xs rounded py-1 px-2 z-10">
                                                   @foreach($dayLogs as $logEntry)
-                                                      <div>Entrada: {{ \Carbon\Carbon::parse($logEntry->check_in)->format('H:i') }}</div>
-                                                      <div>Salida: {{ $logEntry->check_out ? \Carbon\Carbon::parse($logEntry->check_out)->format('H:i') : 'En curso' }}</div>
+                                                      <div>{{ __('calendar.log.check_in') }} {{ \Carbon\Carbon::parse($logEntry->check_in)->format('H:i') }}</div>
+                                                      <div>
+                                                          {{ __('calendar.log.check_out') }} 
+                                                          {{ $logEntry->check_out ? \Carbon\Carbon::parse($logEntry->check_out)->format('H:i') : __('calendar.log.in_progress') }}
+                                                      </div>
                                                       @if(!$loop->last)
                                                           <hr class="my-1 border-gray-500">
                                                       @endif

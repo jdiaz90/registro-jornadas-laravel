@@ -1,7 +1,9 @@
 <x-app-layout>
     <!-- Slot para el encabezado -->
     <x-slot name="header">
-        <h1 class="text-2xl font-bold">Editar Registro #{{ $workLog->id }}</h1>
+        <h1 class="text-2xl font-bold">
+            {{ __('work_logs.edit.header', ['id' => $workLog->id]) }}
+        </h1>
     </x-slot>
 
     <!-- Mensajes flash generales (éxito o error) -->
@@ -20,7 +22,7 @@
                     <!-- Campo para Entrada (Check In) -->
                     <div class="mb-4">
                         <label for="check_in" class="block text-gray-700 font-bold">
-                            Entrada:
+                            {{ __('work_logs.edit.check_in_label') }}:
                         </label>
                         <input 
                             type="datetime-local" 
@@ -30,7 +32,7 @@
                             value="{{ old('check_in', $workLog->check_in ? \Carbon\Carbon::parse($workLog->check_in)->format('Y-m-d\TH:i') : '') }}"
                             class="mt-1 block w-full border-gray-300 rounded-md" 
                         />
-                        <!-- Mostramos el error para 'check_in' debajo del input -->
+                        <!-- Mostrar el error para 'check_in' debajo del input -->
                         @error('check_in')
                             <x-input-error :messages="[$message]" />
                         @enderror
@@ -39,7 +41,7 @@
                     <!-- Campo para Salida (Check Out) -->
                     <div class="mb-4">
                         <label for="check_out" class="block text-gray-700 font-bold">
-                            Salida:
+                            {{ __('work_logs.edit.check_out_label') }}:
                         </label>
                         <input 
                             type="datetime-local" 
@@ -49,7 +51,7 @@
                             value="{{ old('check_out', $workLog->check_out ? \Carbon\Carbon::parse($workLog->check_out)->format('Y-m-d\TH:i') : '') }}"
                             class="mt-1 block w-full border-gray-300 rounded-md" 
                         />
-                        <!-- Mostramos el error para 'check_out' debajo del input -->
+                        <!-- Mostrar el error para 'check_out' debajo del input -->
                         @error('check_out')
                             <x-input-error :messages="[$message]" />
                         @enderror
@@ -58,7 +60,7 @@
                     <!-- Campo de Hash actual (sólo lectura) -->
                     <div class="mb-4">
                         <label for="hash" class="block text-gray-700 font-bold">
-                            Hash actual:
+                            {{ __('work_logs.edit.current_hash_label') }}:
                         </label>
                         <input 
                             type="text" 
@@ -75,7 +77,7 @@
                         type="submit"
                         class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
                     >
-                        Guardar cambios
+                        {{ __('work_logs.edit.save_changes') }}
                     </button>
                 </form>
             </div>
