@@ -62,6 +62,24 @@
                         {{ __('components.work_logs_table.table.check_out') }}
                     </th>
                     <th class="px-4 py-2 text-left text-sm font-medium text-gray-700 dark:text-gray-200">
+                        {{ __('components.work_logs_table.table.pause_start') }}
+                    </th>
+                    <th class="px-4 py-2 text-left text-sm font-medium text-gray-700 dark:text-gray-200">
+                        {{ __('components.work_logs_table.table.pause_end') }}
+                    </th>
+                    <th class="px-4 py-2 text-left text-sm font-medium text-gray-700 dark:text-gray-200">
+                        {{ __('components.work_logs_table.table.ordinary_hours') }}
+                    </th>
+                    <th class="px-4 py-2 text-left text-sm font-medium text-gray-700 dark:text-gray-200">
+                        {{ __('components.work_logs_table.table.complementary_hours') }}
+                    </th>
+                    <th class="px-4 py-2 text-left text-sm font-medium text-gray-700 dark:text-gray-200">
+                        {{ __('components.work_logs_table.table.overtime_hours') }}
+                    </th>
+                    <th class="px-4 py-2 text-left text-sm font-medium text-gray-700 dark:text-gray-200">
+                        {{ __('components.work_logs_table.table.pause_minutes') }}
+                    </th>
+                    <th class="px-4 py-2 text-left text-sm font-medium text-gray-700 dark:text-gray-200">
                         {{ __('components.work_logs_table.table.hash') }}
                     </th>
                 </tr>
@@ -74,9 +92,29 @@
                                 {{ $log->id }}
                             </a>
                         </td>
-                        <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">{{ $log->check_in }}</td>
+                        <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
+                            {{ $log->check_in }}
+                        </td>
                         <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
                             {{ $log->check_out ?? __('components.work_logs_table.ongoing') }}
+                        </td>
+                        <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
+                            {{ $log->pause_start ?? '-' }}
+                        </td>
+                        <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
+                            {{ $log->pause_end ?? '-' }}
+                        </td>
+                        <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
+                            {{ $log->ordinary_hours ?? '-' }}
+                        </td>
+                        <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
+                            {{ $log->complementary_hours ?? '-' }}
+                        </td>
+                        <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
+                            {{ $log->overtime_hours ?? '-' }}
+                        </td>
+                        <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
+                            {{ $log->pause_minutes ?? '-' }}
                         </td>
                         <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
                             {{ $log->hash ?? __('components.work_logs_table.pending') }}
@@ -84,7 +122,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="4" class="px-4 py-2 text-center text-sm text-gray-600 dark:text-gray-300">
+                        <td colspan="10" class="px-4 py-2 text-center text-sm text-gray-600 dark:text-gray-300">
                             {{ __('components.work_logs_table.table.no_records') }}
                         </td>
                     </tr>

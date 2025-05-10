@@ -3,9 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class WorkSchedule extends Model
 {
+
+    use HasFactory;
+
     protected $fillable = [
         'user_id',
         'monday_hours', 'monday_break_minutes',

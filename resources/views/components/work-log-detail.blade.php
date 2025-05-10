@@ -8,9 +8,9 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <!-- Usuario -->
             <div>
-                <strong>{{ __('components.work_log_detail.label.user') }}</strong> {{ $workLog->user->name ?? 'N/A' }}
+                <strong>{{ __('components.work_log_detail.label.user') }}:</strong> {{ $workLog->user->name ?? 'N/A' }}
             </div>
-            <!-- Hash, con texto pequeño y que se ajuste con break-words -->
+            <!-- Hash, con texto pequeño y wrap -->
             <div>
                 <strong>{{ __('components.work_log_detail.label.hash') }}:</strong>
                 <div class="text-xs break-words">
@@ -25,13 +25,37 @@
             <div>
                 <strong>{{ __('components.work_log_detail.label.check_out') }}:</strong> {{ $workLog->check_out ?? '-' }}
             </div>
+            <!-- Pausa: Inicio -->
+            <div>
+                <strong>{{ __('components.work_log_detail.label.pause_start') }}:</strong> {{ $workLog->pause_start ?? '-' }}
+            </div>
+            <!-- Pausa: Fin -->
+            <div>
+                <strong>{{ __('components.work_log_detail.label.pause_end') }}:</strong> {{ $workLog->pause_end ?? '-' }}
+            </div>
+            <!-- Horas Ordinarias -->
+            <div>
+                <strong>{{ __('components.work_log_detail.label.ordinary_hours') }}:</strong> {{ $workLog->ordinary_hours ?? '-' }}
+            </div>
+            <!-- Horas Complementarias -->
+            <div>
+                <strong>{{ __('components.work_log_detail.label.complementary_hours') }}:</strong> {{ $workLog->complementary_hours ?? '-' }}
+            </div>
+            <!-- Horas Extraordinarias -->
+            <div>
+                <strong>{{ __('components.work_log_detail.label.overtime_hours') }}:</strong> {{ $workLog->overtime_hours ?? '-' }}
+            </div>
+            <!-- Minutos de Pausa -->
+            <div>
+                <strong>{{ __('components.work_log_detail.label.pause_minutes') }}:</strong> {{ $workLog->pause_minutes ?? '-' }}
+            </div>
             <!-- Creado -->
             <div>
-                <strong>{{ __('components.work_log_detail.label.created_at') }}</strong> {{ $workLog->created_at }}
+                <strong>{{ __('components.work_log_detail.label.created_at') }}:</strong> {{ $workLog->created_at }}
             </div>
             <!-- Actualizado -->
             <div>
-                <strong>{{ __('components.work_log_detail.label.updated_at') }}</strong> {{ $workLog->updated_at }}
+                <strong>{{ __('components.work_log_detail.label.updated_at') }}:</strong> {{ $workLog->updated_at }}
             </div>
         </div>
     </div>
@@ -79,28 +103,136 @@
                                     @if($audit->old_hash !== $audit->new_hash)
                                         <div>{{ __('components.work_log_detail.label.hash') }}</div>
                                     @endif
+                                    @if($audit->old_pause_start !== $audit->new_pause_start)
+                                        <div>{{ __('components.work_log_detail.label.pause_start') }}</div>
+                                    @endif
+                                    @if($audit->old_pause_end !== $audit->new_pause_end)
+                                        <div>{{ __('components.work_log_detail.label.pause_end') }}</div>
+                                    @endif
+                                    @if($audit->old_ordinary_hours !== $audit->new_ordinary_hours)
+                                        <div>{{ __('components.work_log_detail.label.ordinary_hours') }}</div>
+                                    @endif
+                                    @if($audit->old_complementary_hours !== $audit->new_complementary_hours)
+                                        <div>{{ __('components.work_log_detail.label.complementary_hours') }}</div>
+                                    @endif
+                                    @if($audit->old_overtime_hours !== $audit->new_overtime_hours)
+                                        <div>{{ __('components.work_log_detail.label.overtime_hours') }}</div>
+                                    @endif
+                                    @if($audit->old_pause_minutes !== $audit->new_pause_minutes)
+                                        <div>{{ __('components.work_log_detail.label.pause_minutes') }}</div>
+                                    @endif
                                 </td>
                                 <td class="px-4 py-2 whitespace-nowrap">
-                                    <div>
-                                        <strong>{{ __('components.work_log_detail.label.check_in') }}:</strong> {{ $audit->old_check_in ?? '-' }}
-                                    </div>
-                                    <div>
-                                        <strong>{{ __('components.work_log_detail.label.check_out') }}:</strong> {{ $audit->old_check_out ?? '-' }}
-                                    </div>
-                                    <div>
-                                        <strong>{{ __('components.work_log_detail.label.hash') }}:</strong> {{ $audit->old_hash ?? '-' }}
-                                    </div>
+                                    @if($audit->old_check_in !== $audit->new_check_in)
+                                        <div>
+                                            <strong>{{ __('components.work_log_detail.label.check_in') }}:</strong>
+                                            {{ $audit->old_check_in ?? '-' }}
+                                        </div>
+                                    @endif
+                                    @if($audit->old_check_out !== $audit->new_check_out)
+                                        <div>
+                                            <strong>{{ __('components.work_log_detail.label.check_out') }}:</strong>
+                                            {{ $audit->old_check_out ?? '-' }}
+                                        </div>
+                                    @endif
+                                    @if($audit->old_hash !== $audit->new_hash)
+                                        <div>
+                                            <strong>{{ __('components.work_log_detail.label.hash') }}:</strong>
+                                            {{ $audit->old_hash ?? '-' }}
+                                        </div>
+                                    @endif
+                                    @if($audit->old_pause_start !== $audit->new_pause_start)
+                                        <div>
+                                            <strong>{{ __('components.work_log_detail.label.pause_start') }}:</strong>
+                                            {{ $audit->old_pause_start ?? '-' }}
+                                        </div>
+                                    @endif
+                                    @if($audit->old_pause_end !== $audit->new_pause_end)
+                                        <div>
+                                            <strong>{{ __('components.work_log_detail.label.pause_end') }}:</strong>
+                                            {{ $audit->old_pause_end ?? '-' }}
+                                        </div>
+                                    @endif
+                                    @if($audit->old_ordinary_hours !== $audit->new_ordinary_hours)
+                                        <div>
+                                            <strong>{{ __('components.work_log_detail.label.ordinary_hours') }}:</strong>
+                                            {{ $audit->old_ordinary_hours ?? '-' }}
+                                        </div>
+                                    @endif
+                                    @if($audit->old_complementary_hours !== $audit->new_complementary_hours)
+                                        <div>
+                                            <strong>{{ __('components.work_log_detail.label.complementary_hours') }}:</strong>
+                                            {{ $audit->old_complementary_hours ?? '-' }}
+                                        </div>
+                                    @endif
+                                    @if($audit->old_overtime_hours !== $audit->new_overtime_hours)
+                                        <div>
+                                            <strong>{{ __('components.work_log_detail.label.overtime_hours') }}:</strong>
+                                            {{ $audit->old_overtime_hours ?? '-' }}
+                                        </div>
+                                    @endif
+                                    @if($audit->old_pause_minutes !== $audit->new_pause_minutes)
+                                        <div>
+                                            <strong>{{ __('components.work_log_detail.label.pause_minutes') }}:</strong>
+                                            {{ $audit->old_pause_minutes ?? '-' }}
+                                        </div>
+                                    @endif
                                 </td>
                                 <td class="px-4 py-2 whitespace-nowrap">
-                                    <div>
-                                        <strong>{{ __('components.work_log_detail.label.check_in') }}:</strong> {{ $audit->new_check_in ?? '-' }}
-                                    </div>
-                                    <div>
-                                        <strong>{{ __('components.work_log_detail.label.check_out') }}:</strong> {{ $audit->new_check_out ?? '-' }}
-                                    </div>
-                                    <div>
-                                        <strong>{{ __('components.work_log_detail.label.hash') }}:</strong> {{ $audit->new_hash ?? '-' }}
-                                    </div>
+                                    @if($audit->old_check_in !== $audit->new_check_in)
+                                        <div>
+                                            <strong>{{ __('components.work_log_detail.label.check_in') }}:</strong>
+                                            {{ $audit->new_check_in ?? '-' }}
+                                        </div>
+                                    @endif
+                                    @if($audit->old_check_out !== $audit->new_check_out)
+                                        <div>
+                                            <strong>{{ __('components.work_log_detail.label.check_out') }}:</strong>
+                                            {{ $audit->new_check_out ?? '-' }}
+                                        </div>
+                                    @endif
+                                    @if($audit->old_hash !== $audit->new_hash)
+                                        <div>
+                                            <strong>{{ __('components.work_log_detail.label.hash') }}:</strong>
+                                            {{ $audit->new_hash ?? '-' }}
+                                        </div>
+                                    @endif
+                                    @if($audit->old_pause_start !== $audit->new_pause_start)
+                                        <div>
+                                            <strong>{{ __('components.work_log_detail.label.pause_start') }}:</strong>
+                                            {{ $audit->new_pause_start ?? '-' }}
+                                        </div>
+                                    @endif
+                                    @if($audit->old_pause_end !== $audit->new_pause_end)
+                                        <div>
+                                            <strong>{{ __('components.work_log_detail.label.pause_end') }}:</strong>
+                                            {{ $audit->new_pause_end ?? '-' }}
+                                        </div>
+                                    @endif
+                                    @if($audit->old_ordinary_hours !== $audit->new_ordinary_hours)
+                                        <div>
+                                            <strong>{{ __('components.work_log_detail.label.ordinary_hours') }}:</strong>
+                                            {{ $audit->new_ordinary_hours ?? '-' }}
+                                        </div>
+                                    @endif
+                                    @if($audit->old_complementary_hours !== $audit->new_complementary_hours)
+                                        <div>
+                                            <strong>{{ __('components.work_log_detail.label.complementary_hours') }}:</strong>
+                                            {{ $audit->new_complementary_hours ?? '-' }}
+                                        </div>
+                                    @endif
+                                    @if($audit->old_overtime_hours !== $audit->new_overtime_hours)
+                                        <div>
+                                            <strong>{{ __('components.work_log_detail.label.overtime_hours') }}:</strong>
+                                            {{ $audit->new_overtime_hours ?? '-' }}
+                                        </div>
+                                    @endif
+                                    @if($audit->old_pause_minutes !== $audit->new_pause_minutes)
+                                        <div>
+                                            <strong>{{ __('components.work_log_detail.label.pause_minutes') }}:</strong>
+                                            {{ $audit->new_pause_minutes ?? '-' }}
+                                        </div>
+                                    @endif
                                 </td>
                                 <td class="px-4 py-2 whitespace-nowrap">
                                     {{ $audit->updated_by }}
@@ -116,6 +248,7 @@
             </p>
         @endif
     </div>
+
 
     <!-- Bloque de botones (Editar e Imprimir) -->
     <div class="flex flex-col sm:flex-row gap-4 mt-4">
