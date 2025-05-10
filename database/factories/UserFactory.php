@@ -24,25 +24,31 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+        // Forzamos la creación del objeto Faker con el locale 'en_US'
+        $this->faker = \Faker\Factory::create('es_ES');
+        // Opcional: agregar el provider de Person, aunque normalmente no es necesario
+        // $this->faker->addProvider(new \Faker\Provider\en_US\Person($this->faker));
+    
         return [
-            'name'              => $this->faker->name,
-            'email'             => $this->faker->unique()->safeEmail,
+            'name'              => $this->faker->name(), // Llamada al método name()
+            'email'             => $this->faker->unique()->safeEmail(), // Con paréntesis
             'email_verified_at' => now(),
             'password'          => static::$password ??= Hash::make('password'),
             'remember_token'    => Str::random(10),
             // Campos adicionales para nuestros usuarios
-            'role'              => $this->faker->randomElement(['user', 'admin']), // Por defecto 'user'
+            'role'              => $this->faker->randomElement(['user', 'admin']),
             'locale'            => 'es',
             'contract_type'     => $this->faker->randomElement(['fulltime', 'parttime']),
         ];
     }
+    
 
     /**
      * Indicate that the model's email address should be unverified.
      */
     public function unverified(): static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn(array $attributes) => [
             'email_verified_at' => null,
         ]);
     }

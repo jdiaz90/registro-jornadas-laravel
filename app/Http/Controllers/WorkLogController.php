@@ -102,7 +102,7 @@ class WorkLogController extends Controller
     // Procesa la actualización realizada por el administrador.
     public function update(Request $request, $id)
     {
-        // Validamos todos los campos que se reciben del formulario.
+        // Validar los campos, incluyendo modification_reason
         $validated = $request->validate([
             'check_in'            => 'required|date|before_or_equal:check_out',
             'check_out'           => 'required|date',
@@ -112,19 +112,20 @@ class WorkLogController extends Controller
             'complementary_hours' => 'nullable|numeric',
             'overtime_hours'      => 'nullable|numeric',
             'pause_minutes'       => 'nullable|integer',
+            'modification_reason' => 'required|string|max:255',
         ], [
             'check_in.before_or_equal' => 'La fecha de entrada no puede ser posterior a la fecha de salida.',
             'pause_end.after'          => 'La hora de finalización de la pausa debe ser posterior a la de inicio.',
         ]);
 
-        // Buscamos el registro.
+        // Buscamos el registro
         $workLog = WorkLog::findOrFail($id);
 
-        // Normalizamos los valores existentes para los campos de fecha con Carbon.
-        $existingCheckIn    = $workLog->check_in ? Carbon::parse($workLog->check_in)->format('Y-m-d\TH:i') : null;
-        $existingCheckOut   = $workLog->check_out ? Carbon::parse($workLog->check_out)->format('Y-m-d\TH:i') : null;
-        $existingPauseStart = $workLog->pause_start ? Carbon::parse($workLog->pause_start)->format('Y-m-d\TH:i') : null;
-        $existingPauseEnd   = $workLog->pause_end ? Carbon::parse($workLog->pause_end)->format('Y-m-d\TH:i') : null;
+        // (Opcional) Normalizamos los valores actuales para comparación.
+        $existingCheckIn    = $workLog->check_in ? \Carbon\Carbon::parse($workLog->check_in)->format('Y-m-d\TH:i') : null;
+        $existingCheckOut   = $workLog->check_out ? \Carbon\Carbon::parse($workLog->check_out)->format('Y-m-d\TH:i') : null;
+        $existingPauseStart = $workLog->pause_start ? \Carbon\Carbon::parse($workLog->pause_start)->format('Y-m-d\TH:i') : null;
+        $existingPauseEnd   = $workLog->pause_end ? \Carbon\Carbon::parse($workLog->pause_end)->format('Y-m-d\TH:i') : null;
 
         // Valores existentes para los campos numéricos:
         $existingOrdinaryHours      = $workLog->ordinary_hours;
@@ -132,19 +133,19 @@ class WorkLogController extends Controller
         $existingOvertimeHours      = $workLog->overtime_hours;
         $existingPauseMinutes       = $workLog->pause_minutes;
 
-        // Obtenemos los nuevos valores ya validados (solo para las fechas).
+        // Extraemos los nuevos valores para las fechas.
         $inputCheckIn    = $validated['check_in'];
         $inputCheckOut   = $validated['check_out'];
         $inputPauseStart = $validated['pause_start'] ?? null;
         $inputPauseEnd   = $validated['pause_end'] ?? null;
 
-        // Valores para los campos numéricos:
+        // Extraemos los valores numéricos.
         $inputOrdinaryHours      = $validated['ordinary_hours'] ?? null;
         $inputComplementaryHours = $validated['complementary_hours'] ?? null;
         $inputOvertimeHours      = $validated['overtime_hours'] ?? null;
         $inputPauseMinutes       = $validated['pause_minutes'] ?? null;
 
-        // Comparación para determinar si hubo algún cambio
+        // Comprobamos que al menos haya algún cambio.
         if (
             $existingCheckIn === $inputCheckIn &&
             $existingCheckOut === $inputCheckOut &&
@@ -159,16 +160,21 @@ class WorkLogController extends Controller
                 ->with('error', __('work_logs.messages.update.no_changes'));
         }
 
-        // Asignamos todos los nuevos valores, utilizando la asignación masiva.
-        $workLog->fill($validated);
+        // Extraemos el motivo de modificación y lo eliminamos del array que se actualizará
+        $modificationReason = $validated['modification_reason'];
+        $data = $validated;
+        unset($data['modification_reason']);
 
-        // (Opcional) Si necesitas recalcular horas automáticamente, puedes invocar:
-        // $workLog->calculateHours();
+        // Asignamos el resto de los valores al modelo
+        $workLog->fill($data);
+        
+        // Asignamos el motivo a la propiedad temporal en lugar de al array de atributos
+        $workLog->temp_modification_reason = $modificationReason;
 
-        // Se recalcula el hash (que toma en cuenta también los nuevos campos).
+        // Recalcula el hash (ejemplo)
         $workLog->hash = $workLog->generateHash();
 
-        // Intentamos guardar y capturamos cualquier error.
+        // Intentamos guardar los cambios
         try {
             $workLog->save();
         } catch (\Exception $e) {
@@ -176,11 +182,9 @@ class WorkLogController extends Controller
                 ->with('error', __('work_logs.messages.update.save_error', ['error' => $e->getMessage()]));
         }
 
-        // Redirigimos a la vista de detalle del registro con un mensaje de éxito.
         return redirect()->route('work_logs.show', $workLog->id)
             ->with('success', __('work_logs.messages.update.success'));
     }
-
 
     // Método para descargar reporte anual.
     public function exportYearlyReport($year)

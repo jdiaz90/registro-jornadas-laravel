@@ -23,4 +23,10 @@ class YearlyWorkLogsExport implements WithMultipleSheets
         }
         return $sheets;
     }
+
+    public function getYear()
+    {
+        return $this->year;
+    }
+
 }

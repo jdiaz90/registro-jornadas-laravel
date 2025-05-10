@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class WorkLogAudit extends Model
 {
-
     use HasFactory;
 
     protected $table = 'work_logs_audits';
@@ -21,13 +20,14 @@ class WorkLogAudit extends Model
         'old_check_out',
         'new_check_out',
 
-        // Campos de pausa (inicio y fin)
-        'old_pause_minutes',
-        'new_pause_minutes',
-        'old_pause_minutes',
-        'new_pause_minutes',
+        // Hash
+        'old_hash',
+        'new_hash',
 
-        // Campos del desglose de horas
+        // Usuario que actualizó
+        'updated_by',
+
+        // Desglose de horas
         'old_ordinary_hours',
         'new_ordinary_hours',
         'old_complementary_hours',
@@ -35,20 +35,21 @@ class WorkLogAudit extends Model
         'old_overtime_hours',
         'new_overtime_hours',
 
+        // Campos para la pausa: inicio y fin
+        'old_pause_start',
+        'new_pause_start',
+        'old_pause_end',
+        'new_pause_end',
+
         // Minutos de pausa
         'old_pause_minutes',
         'new_pause_minutes',
 
-        // Hash
-        'old_hash',
-        'new_hash',
-
-        // Usuario que actualizó
-        'updated_by',
+        // Comentario del motivo de modificación
+        'modification_reason',
     ];
 
     protected $casts = [
-        // Convertir los valores numéricos a float o integer según corresponda.
         'old_ordinary_hours'      => 'float',
         'new_ordinary_hours'      => 'float',
         'old_complementary_hours' => 'float',
@@ -58,4 +59,9 @@ class WorkLogAudit extends Model
         'old_pause_minutes'       => 'integer',
         'new_pause_minutes'       => 'integer',
     ];
+
+    public function workLog()
+    {
+        return $this->belongsTo(WorkLog::class, 'work_log_id');
+    }
 }

@@ -24,6 +24,9 @@ class WorkLog extends Model
         'overtime_hours'
     ];
 
+    // Propiedad temporal para el motivo de modificación (no se persistirá)
+    public $temp_modification_reason;
+
     // Relación con el usuario
     public function user()
     {
@@ -90,15 +93,16 @@ class WorkLog extends Model
         $checkOut = Carbon::parse($this->check_out);
 
         // Calcular minutos de pausa:
-        // Si se han definido pause_start y pause_end, se calcula su diferencia.
-        // De lo contrario, se usa el valor en pause_minutes.
+        // Utilizamos la diferencia en valor absoluto para evitar negativos.
         if ($this->pause_start && $this->pause_end) {
-            $pauseMinutes = Carbon::parse($this->pause_start)->diffInMinutes(Carbon::parse($this->pause_end));
+            $pauseMinutes = Carbon::parse($this->pause_start)
+                ->diffInMinutes(Carbon::parse($this->pause_end), true);
         } else {
             $pauseMinutes = $this->pause_minutes ?? 0;
         }
 
-        $workedMinutes = $checkOut->diffInMinutes($checkIn) - $pauseMinutes;
+        // Calcular los minutos trabajados de forma absoluta restando la pausa
+        $workedMinutes = $checkOut->diffInMinutes($checkIn, true) - $pauseMinutes;
 
         // Determinar el día de la semana (en minúsculas) a partir del check_in.
         $dayOfWeek = strtolower($checkIn->format('l'));

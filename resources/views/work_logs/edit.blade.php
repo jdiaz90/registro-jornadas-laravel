@@ -180,6 +180,24 @@
                         />
                     </div>
 
+                    <!-- Grupo 4: Motivo de la modificación (Obligatorio) -->
+                    <div class="mb-4 mt-6">
+                        <label for="modification_reason" class="block text-gray-700 font-bold">
+                            {{ __('work_logs.edit.modification_reason_label', ['id' => $workLog->id]) }}:
+                        </label>
+                        <textarea 
+                            name="modification_reason" 
+                            id="modification_reason" 
+                            required
+                            class="mt-1 block w-full border-gray-300 rounded-md"
+                            rows="3"
+                            maxlength="255">{{ old('modification_reason') }}</textarea>
+
+                        @error('modification_reason')
+                            <x-input-error :messages="[$message]" />
+                        @enderror
+                    </div>
+
                     <!-- Botón para enviar el formulario -->
                     <button 
                         type="submit"

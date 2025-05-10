@@ -85,14 +85,20 @@
                             <th class="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
                                 {{ __('components.work_log_detail.table.updated_by') }}
                             </th>
+                            <!-- Nueva columna para el comentario -->
+                            <th class="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                                {{ __('components.work_log_detail.label.modification_reason') }}
+                            </th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
                         @foreach($audits as $audit)
                             <tr>
+                                <!-- Fecha de modificación -->
                                 <td class="px-4 py-2 whitespace-nowrap">
                                     {{ $audit->created_at->format('d/m/Y H:i') }}
                                 </td>
+                                <!-- Campos modificados -->
                                 <td class="px-4 py-2 whitespace-nowrap">
                                     @if($audit->old_check_in !== $audit->new_check_in)
                                         <div>{{ __('components.work_log_detail.label.check_in') }}</div>
@@ -122,6 +128,7 @@
                                         <div>{{ __('components.work_log_detail.label.pause_minutes') }}</div>
                                     @endif
                                 </td>
+                                <!-- Valores antiguos -->
                                 <td class="px-4 py-2 whitespace-nowrap">
                                     @if($audit->old_check_in !== $audit->new_check_in)
                                         <div>
@@ -178,6 +185,7 @@
                                         </div>
                                     @endif
                                 </td>
+                                <!-- Valores nuevos -->
                                 <td class="px-4 py-2 whitespace-nowrap">
                                     @if($audit->old_check_in !== $audit->new_check_in)
                                         <div>
@@ -234,8 +242,13 @@
                                         </div>
                                     @endif
                                 </td>
+                                <!-- Updated by -->
                                 <td class="px-4 py-2 whitespace-nowrap">
                                     {{ $audit->updated_by }}
+                                </td>
+                                <!-- Nueva columna: Comentario de la modificación -->
+                                <td class="px-4 py-2 whitespace-nowrap">
+                                    {{ $audit->modification_reason ?? '-' }}
                                 </td>
                             </tr>
                         @endforeach
@@ -248,7 +261,6 @@
             </p>
         @endif
     </div>
-
 
     <!-- Bloque de botones (Editar e Imprimir) -->
     <div class="flex flex-col sm:flex-row gap-4 mt-4">
