@@ -27,6 +27,9 @@
                 </header>
             @endisset
 
+            <!-- Migas de Pan (Breadcrumbs) -->
+            <x-breadcrumbs />
+
             <!-- Page Content -->
             <main>
                 <!-- Mensajes flash generales (éxito o error) -->
