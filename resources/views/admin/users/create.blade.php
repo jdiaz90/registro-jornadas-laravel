@@ -1,5 +1,5 @@
 <x-app-layout>
-    <!-- Encabezado -->
+    <!-- Slot para el header -->
     <x-slot name="header">
         <div class="flex items-center justify-between">
             <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-200">
@@ -14,11 +14,6 @@
     <!-- Contenido principal -->
     <div class="py-6">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            @if(session('error'))
-                <div class="mb-4 p-4 bg-red-100 text-red-600 border border-red-200 rounded">
-                    {{ session('error') }}
-                </div>
-            @endif
             
             <!-- Formulario de creación del usuario -->
             <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
@@ -63,6 +58,40 @@
                             required
                         />
                         @error('email')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Campo: Contraseña -->
+                    <div class="mb-4">
+                        <label for="password" class="block text-sm font-bold text-gray-700">
+                            {{ __('admin.users.create.form.password') }}
+                        </label>
+                        <input 
+                            type="password"
+                            id="password"
+                            name="password"
+                            class="mt-1 block w-full border border-gray-300 rounded-md"
+                            required
+                        />
+                        @error('password')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Campo: Confirmar Contraseña -->
+                    <div class="mb-4">
+                        <label for="password_confirmation" class="block text-sm font-bold text-gray-700">
+                            {{ __('admin.users.create.form.password_confirmation') }}
+                        </label>
+                        <input 
+                            type="password"
+                            id="password_confirmation"
+                            name="password_confirmation"
+                            class="mt-1 block w-full border border-gray-300 rounded-md"
+                            required
+                        />
+                        @error('password_confirmation')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                         @enderror
                     </div>

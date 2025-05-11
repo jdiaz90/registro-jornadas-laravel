@@ -12,13 +12,13 @@ class WorkSchedule extends Model
 
     protected $fillable = [
         'user_id',
-        'monday_hours', 'monday_break_minutes',
-        'tuesday_hours', 'tuesday_break_minutes',
-        'wednesday_hours', 'wednesday_break_minutes',
-        'thursday_hours', 'thursday_break_minutes',
-        'friday_hours', 'friday_break_minutes',
-        'saturday_hours', 'saturday_break_minutes',
-        'sunday_hours', 'sunday_break_minutes',
+        'monday_hours',
+        'tuesday_hours',
+        'wednesday_hours',
+        'thursday_hours',
+        'friday_hours',
+        'saturday_hours',
+        'sunday_hours'
     ];
 
     public function user()

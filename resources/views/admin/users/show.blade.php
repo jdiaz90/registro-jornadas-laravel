@@ -7,7 +7,7 @@
             </h1>
             <div class="flex space-x-4">
                 <a href="{{ route('admin.users.edit', $user->id) }}" class="text-blue-500 hover:underline">
-                    {{ __('admin.users.show.edit_button', []) ?: 'Editar' }}
+                    {{ __('admin.users.show.edit_button') }}
                 </a>
                 <a href="{{ route('admin.users.index') }}" class="text-blue-500 hover:underline">
                     {{ __('admin.users.show.back_to_list') }}
@@ -19,7 +19,7 @@
     <!-- Contenido principal -->
     <div class="py-12">
         <div class="max-w-5xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            <!-- Datos básicos del usuario (sin el campo locale) -->
+            <!-- Datos básicos del usuario -->
             <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
                 <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">
                     {{ __('admin.users.show.info_title') }}
@@ -67,18 +67,18 @@
             <!-- Sección de Horarios de Trabajo -->
             @if($user->workSchedule)
                 @php
-                    // Definición de los días completos
+                    // Utilizamos las traducciones centralizadas para los días de la semana
                     $days = [
-                        'monday'    => 'Lunes',
-                        'tuesday'   => 'Martes',
-                        'wednesday' => 'Miércoles',
-                        'thursday'  => 'Jueves',
-                        'friday'    => 'Viernes',
-                        'saturday'  => 'Sábado',
-                        'sunday'    => 'Domingo'
+                        'monday'    => __('admin.weekdays.monday'),
+                        'tuesday'   => __('admin.weekdays.tuesday'),
+                        'wednesday' => __('admin.weekdays.wednesday'),
+                        'thursday'  => __('admin.weekdays.thursday'),
+                        'friday'    => __('admin.weekdays.friday'),
+                        'saturday'  => __('admin.weekdays.saturday'),
+                        'sunday'    => __('admin.weekdays.sunday'),
                     ];
 
-                    // Filtrar: Si es sábado o domingo y las horas asignadas son 0, se omiten de la tabla.
+                    // Filtrado: si es sábado o domingo y no tiene horas asignadas, se omiten
                     $filteredDays = [];
                     foreach ($days as $dayKey => $dayLabel) {
                         $hours = $user->workSchedule->{$dayKey . '_hours'} ?? 0;
@@ -88,7 +88,7 @@
                         $filteredDays[$dayKey] = $dayLabel;
                     }
 
-                    // Determinar si se debe mostrar la columna "Minutos de descanso" y calcular el total de horas.
+                    // Determinar si se debe mostrar la columna de "Minutos de descanso" y calcular el total de horas.
                     $showBreakColumn = false;
                     $totalHours = 0;
                     foreach ($filteredDays as $dayKey => $dayLabel) {
@@ -109,10 +109,16 @@
                         <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                             <thead class="bg-gray-50 dark:bg-gray-900">
                                 <tr>
-                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400">Día</th>
-                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400">Horas asignadas</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400">
+                                        {{ __('admin.users.show.schedule.day') }}
+                                    </th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400">
+                                        {{ __('admin.users.show.schedule.assigned_hours') }}
+                                    </th>
                                     @if($showBreakColumn)
-                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400">Minutos de descanso</th>
+                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400">
+                                            {{ __('admin.users.show.schedule.break_minutes') }}
+                                        </th>
                                     @endif
                                 </tr>
                             </thead>
@@ -135,7 +141,9 @@
                             </tbody>
                             <tfoot class="bg-gray-50 dark:bg-gray-900">
                                 <tr>
-                                    <td class="px-4 py-2 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">Total</td>
+                                    <td class="px-4 py-2 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">
+                                        {{ __('admin.users.show.schedule.total') }}
+                                    </td>
                                     <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
                                         {{ $totalHours }}
                                     </td>

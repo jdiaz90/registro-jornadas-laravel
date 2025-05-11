@@ -8,6 +8,13 @@ return [
         'check_out_label'    => 'Saída',
         'current_hash_label' => 'Hash actual',
         'save_changes'       => 'Gardar cambios',
+        'pause_start_label'         => 'Inicio da pausa',
+        'pause_end_label'           => 'Fin da pausa',
+        'ordinary_hours_label'      => 'Horas ordinarias',
+        'complementary_hours_label' => 'Horas complementarias',
+        'overtime_hours_label'      => 'Horas extras',
+        'pause_minutes_label'       => 'Minutos da pausa',
+        'modification_reason_label' => 'Motivo da modificación',
     ],
 
     'index' => [

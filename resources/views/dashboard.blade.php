@@ -30,9 +30,10 @@
                     <p class="text-gray-600 dark:text-gray-300">
                         {{ __('dashboard.cards.work_logs.description') }}
                     </p>
-                    <a href="{{ route('work_logs.index') }}"
-                       class="mt-4 inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded">
-                        {{ __('dashboard.cards.work_logs.button') }}
+                    <a href="{{ route('work_logs.index') }}">
+                        <x-primary-button class="mt-4 bg-blue-600 hover:bg-blue-700">
+                            {{ __('dashboard.cards.work_logs.button') }}
+                        </x-primary-button>
                     </a>
                     <!-- Contador dinámico -->
                     <div class="mt-4">
@@ -51,14 +52,16 @@
                     <p class="text-gray-600 dark:text-gray-300">
                         {{ __('dashboard.cards.profile.description') }}
                     </p>
-                    <a href="{{ route('profile.edit') }}"
-                       class="mt-4 inline-block bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded">
-                        {{ __('dashboard.cards.profile.button') }}
+                    <a href="{{ route('profile.edit') }}">
+                        <x-primary-button class="mt-4 bg-green-600 hover:bg-green-700">
+                            {{ __('dashboard.cards.profile.button') }}
+                        </x-primary-button>
                     </a>
                 </div>
 
                 <!-- Tarjeta de Estadísticas -->
                 <div class="bg-white dark:bg-gray-700 shadow rounded-lg p-6 text-center">
+                    <!-- Esta tarjeta muestra datos y no tiene acción, por lo que se mantiene sin botón -->
                     <h3 class="text-xl font-semibold mb-2">
                         {{ __('dashboard.cards.statistics.title') }}
                     </h3>
@@ -81,9 +84,10 @@
                     <p class="text-gray-600 dark:text-gray-300">
                         {{ __('dashboard.cards.calendar.description') }}
                     </p>
-                    <a href="{{ route('calendar.index') }}"
-                       class="mt-4 inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded">
-                        {{ __('dashboard.cards.calendar.button') }}
+                    <a href="{{ route('calendar.index') }}">
+                        <x-primary-button class="mt-4 bg-blue-600 hover:bg-blue-700">
+                            {{ __('dashboard.cards.calendar.button') }}
+                        </x-primary-button>
                     </a>
                 </div>
 
@@ -95,9 +99,10 @@
                     <p class="text-gray-600 dark:text-gray-300">
                         {{ __('dashboard.cards.export_report.description') }}
                     </p>
-                    <a href="{{ route('worklogs.export.yearly', ['year' => now()->year]) }}"
-                       class="mt-4 inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded">
-                        {{ __('dashboard.cards.export_report.button') }}
+                    <a href="{{ route('worklogs.export.yearly', ['year' => now()->year]) }}">
+                        <x-primary-button class="mt-4 bg-blue-600 hover:bg-blue-700">
+                            {{ __('dashboard.cards.export_report.button') }}
+                        </x-primary-button>
                     </a>
                 </div>
 
@@ -109,9 +114,10 @@
                     <p class="text-gray-600 dark:text-gray-300">
                         {{ __('dashboard.cards.verify_record.description') }}
                     </p>
-                    <a href="{{ route('work_logs.verify') }}"
-                       class="mt-4 inline-block bg-yellow-500 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded">
-                        {{ __('dashboard.cards.verify_record.button') }}
+                    <a href="{{ route('work_logs.verify') }}">
+                        <x-primary-button class="mt-4 bg-yellow-500 hover:bg-purple-700">
+                            {{ __('dashboard.cards.verify_record.button') }}
+                        </x-primary-button>
                     </a>
                 </div>
             </div>

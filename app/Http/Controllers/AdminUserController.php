@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
 
 class AdminUserController extends Controller
@@ -84,43 +85,49 @@ class AdminUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        // Validación de los datos del usuario y del work_schedule.
+        // Validación de entrada (incluyendo la contraseña en caso de estar agregada)
         $validated = $request->validate([
-            'name'                              => 'required|string|max:255',
-            'email'                             => 'required|string|email|max:255|unique:users',
-            'role'                              => 'required|string|in:admin,user',
-            'contract_type'                     => 'required|string|in:fulltime,parttime',
-            'work_schedule.monday_hours'        => 'required|integer|min:0|max:24',
-            'work_schedule.tuesday_hours'       => 'required|integer|min:0|max:24',
-            'work_schedule.wednesday_hours'     => 'required|integer|min:0|max:24',
-            'work_schedule.thursday_hours'      => 'required|integer|min:0|max:24',
-            'work_schedule.friday_hours'        => 'required|integer|min:0|max:24',
-            'work_schedule.saturday_hours'      => 'required|integer|min:0|max:24',
-            'work_schedule.sunday_hours'        => 'required|integer|min:0|max:24',
+            'name'          => 'required|string|max:255',
+            'email'         => 'required|string|email|max:255|unique:users',
+            'password'      => 'required|string|min:8|confirmed',
+            'role'          => 'required|string|in:admin,user',
+            'contract_type' => 'required|string|in:fulltime,parttime',
+            // Validaciones para work_schedule...
+            'work_schedule.monday_hours'    => 'required|integer|min:0|max:24',
+            'work_schedule.tuesday_hours'   => 'required|integer|min:0|max:24',
+            'work_schedule.wednesday_hours' => 'required|integer|min:0|max:24',
+            'work_schedule.thursday_hours'  => 'required|integer|min:0|max:24',
+            'work_schedule.friday_hours'    => 'required|integer|min:0|max:24',
+            'work_schedule.saturday_hours'  => 'required|integer|min:0|max:24',
+            'work_schedule.sunday_hours'    => 'required|integer|min:0|max:24',
         ]);
 
-        try {
-            // Creamos el usuario.
-            $user = new User();
-            $user->fill($validated);
-            $user->save();
+        // Creamos el usuario y asignamos la contraseña hasheada.
+        $user = new User();
+        $user->name = $validated['name'];
+        $user->email = $validated['email'];
+        $user->password = \Hash::make($validated['password']); // Asegúrate de importar Illuminate\Support\Facades\Hash
+        $user->role = $validated['role'];
+        $user->contract_type = $validated['contract_type'];
 
-            // Procesamos los datos del work_schedule.
+        if ($user->save()) {
+            // Procesamos el workSchedule si existe.
             $workScheduleData = $request->input('work_schedule');
             if ($workScheduleData) {
                 $user->workSchedule()->create($workScheduleData);
             }
-
             return redirect()
                 ->route('admin.users.show', $user->id)
                 ->with('status', 'Usuario creado correctamente.');
-        } catch (\Exception $e) {
-            return redirect()
-                ->back()
-                ->withInput()
-                ->with('error', 'No se pudo crear el usuario.');
         }
+
+        // Si falla algo en el guardado, se retorna error.
+        return redirect()
+            ->back()
+            ->withInput()
+            ->with('error', 'No se pudo crear el usuario.');
     }
+
 
     /**
      * Muestra el formulario de edición de un usuario.

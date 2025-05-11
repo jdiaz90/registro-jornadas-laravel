@@ -27,8 +27,23 @@
                     <p class="text-gray-600 dark:text-gray-300">
                         {{ __('admin.user_management.description') }}
                     </p>
-                    <a href="{{ route('admin.users.index') }}" class="mt-4 inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded">
-                        {{ __('admin.user_management.button') }}
+                    <a href="{{ route('admin.users.index') }}">
+                        <x-primary-button class="mt-4 bg-blue-600 hover:bg-blue-700">
+                            {{ __('admin.user_management.button') }}
+                        </x-primary-button>
+                    </a>
+                </div>
+
+                <!-- Tarjeta: Crear Usuario -->
+                <div class="bg-white dark:bg-gray-700 shadow rounded-lg p-6 text-center">
+                    <h3 class="text-xl font-semibold mb-2">{{ __('admin.create_user.title') }}</h3>
+                    <p class="text-gray-600 dark:text-gray-300">
+                        {{ __('admin.create_user.description') }}
+                    </p>
+                    <a href="{{ route('admin.users.create') }}">
+                        <x-primary-button class="mt-4 bg-blue-600 hover:bg-blue-700">
+                            {{ __('admin.create_user.button') }}
+                        </x-primary-button>
                     </a>
                 </div>
 
@@ -38,19 +53,10 @@
                     <p class="text-gray-600 dark:text-gray-300">
                         {{ __('admin.work_logs.description') }}
                     </p>
-                    <a href="{{ route('work_logs.index') }}" class="mt-4 inline-block bg-yellow-600 hover:bg-yellow-700 text-white font-semibold py-2 px-4 rounded">
-                        {{ __('admin.work_logs.button') }}
-                    </a>
-                </div>
-
-                <!-- Tarjeta: Estadísticas Globales -->
-                <div class="bg-white dark:bg-gray-700 shadow rounded-lg p-6 text-center">
-                    <h3 class="text-xl font-semibold mb-2">{{ __('admin.global_statistics.title') }}</h3>
-                    <p class="text-gray-600 dark:text-gray-300">
-                        {{ __('admin.global_statistics.description') }}
-                    </p>
-                    <a href="{{-- route('admin.statistics') --}}" class="mt-4 inline-block bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded">
-                        {{ __('admin.global_statistics.button') }}
+                    <a href="{{ route('work_logs.index') }}">
+                        <x-primary-button class="mt-4 bg-yellow-600 hover:bg-yellow-700">
+                            {{ __('admin.work_logs.button') }}
+                        </x-primary-button>
                     </a>
                 </div>
 
@@ -60,8 +66,10 @@
                     <p class="text-gray-600 dark:text-gray-300">
                         {{ __('admin.calendar.description') }}
                     </p>
-                    <a href="{{ route('calendar.index') }}" class="mt-4 inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded">
-                        {{ __('admin.calendar.button') }}
+                    <a href="{{ route('calendar.index') }}">
+                        <x-primary-button class="mt-4 bg-blue-600 hover:bg-blue-700">
+                            {{ __('admin.calendar.button') }}
+                        </x-primary-button>
                     </a>
                 </div>
 
@@ -71,8 +79,10 @@
                     <p class="text-gray-600 dark:text-gray-300">
                         {{ __('admin.reports.description') }}
                     </p>
-                    <a href="{{ route('worklogs.export.yearly', ['year' => date('Y')]) }}" class="mt-4 inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded">
-                        {{ __('admin.reports.button') }}
+                    <a href="{{ route('worklogs.export.yearly', ['year' => date('Y')]) }}">
+                        <x-primary-button class="mt-4 bg-blue-600 hover:bg-blue-700">
+                            {{ __('admin.reports.button') }}
+                        </x-primary-button>
                     </a>
                 </div>
 
@@ -82,8 +92,10 @@
                     <p class="text-gray-600 dark:text-gray-300">
                         {{ __('admin.settings.description') }}
                     </p>
-                    <a href="{{-- route('admin.settings') --}}" class="mt-4 inline-block bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded">
-                        {{ __('admin.settings.button') }}
+                    <a href="{{-- route('admin.settings') --}}">
+                        <x-primary-button class="mt-4 bg-purple-600 hover:bg-purple-700">
+                            {{ __('admin.settings.button') }}
+                        </x-primary-button>
                     </a>
                 </div>
             </div>

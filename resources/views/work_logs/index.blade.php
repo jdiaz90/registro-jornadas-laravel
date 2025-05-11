@@ -23,9 +23,9 @@
                         </p>
                         <form action="{{ route('work_logs.check_in') }}" method="POST" class="mt-4">
                             @csrf
-                            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white appearance-none focus:outline-none font-semibold py-2 px-4 rounded block mx-auto">
+                            <x-primary-button class="block mx-auto bg-blue-600 hover:bg-blue-700">
                                 {{ __('work_logs.index.check_in.button') }}
-                            </button>
+                            </x-primary-button>
                         </form>
                     </div>
                     <!-- Tarjeta: Registrar Salida -->
@@ -38,9 +38,9 @@
                         </p>
                         <form action="{{ route('work_logs.check_out') }}" method="POST" class="mt-4">
                             @csrf
-                            <button type="submit" class="bg-yellow-500 hover:bg-yellow-600 text-white appearance-none focus:outline-none font-semibold py-2 px-4 rounded block mx-auto">
+                            <x-primary-button class="block mx-auto bg-yellow-500 hover:bg-yellow-600">
                                 {{ __('work_logs.index.check_out.button') }}
-                            </button>
+                            </x-primary-button>
                         </form>
                     </div>
                 </div>

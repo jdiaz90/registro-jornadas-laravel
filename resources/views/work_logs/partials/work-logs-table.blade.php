@@ -19,18 +19,42 @@
                     </label>
                     <select name="month" class="mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                         <option value="">{{ __('components.work_logs_table.filter.option_all') }}</option>
-                        <option value="1" {{ request('month') == 1 ? 'selected' : '' }}>Enero</option>
-                        <option value="2" {{ request('month') == 2 ? 'selected' : '' }}>Febrero</option>
-                        <option value="3" {{ request('month') == 3 ? 'selected' : '' }}>Marzo</option>
-                        <option value="4" {{ request('month') == 4 ? 'selected' : '' }}>Abril</option>
-                        <option value="5" {{ request('month') == 5 ? 'selected' : '' }}>Mayo</option>
-                        <option value="6" {{ request('month') == 6 ? 'selected' : '' }}>Junio</option>
-                        <option value="7" {{ request('month') == 7 ? 'selected' : '' }}>Julio</option>
-                        <option value="8" {{ request('month') == 8 ? 'selected' : '' }}>Agosto</option>
-                        <option value="9" {{ request('month') == 9 ? 'selected' : '' }}>Septiembre</option>
-                        <option value="10" {{ request('month') == 10 ? 'selected' : '' }}>Octubre</option>
-                        <option value="11" {{ request('month') == 11 ? 'selected' : '' }}>Noviembre</option>
-                        <option value="12" {{ request('month') == 12 ? 'selected' : '' }}>Diciembre</option>
+                        <option value="1" {{ request('month') == 1 ? 'selected' : '' }}>
+                            {{ __('components.months.1') }}
+                        </option>
+                        <option value="2" {{ request('month') == 2 ? 'selected' : '' }}>
+                            {{ __('components.months.2') }}
+                        </option>
+                        <option value="3" {{ request('month') == 3 ? 'selected' : '' }}>
+                            {{ __('components.months.3') }}
+                        </option>
+                        <option value="4" {{ request('month') == 4 ? 'selected' : '' }}>
+                            {{ __('components.months.4') }}
+                        </option>
+                        <option value="5" {{ request('month') == 5 ? 'selected' : '' }}>
+                            {{ __('components.months.5') }}
+                        </option>
+                        <option value="6" {{ request('month') == 6 ? 'selected' : '' }}>
+                            {{ __('components.months.6') }}
+                        </option>
+                        <option value="7" {{ request('month') == 7 ? 'selected' : '' }}>
+                            {{ __('components.months.7') }}
+                        </option>
+                        <option value="8" {{ request('month') == 8 ? 'selected' : '' }}>
+                            {{ __('components.months.8') }}
+                        </option>
+                        <option value="9" {{ request('month') == 9 ? 'selected' : '' }}>
+                            {{ __('components.months.9') }}
+                        </option>
+                        <option value="10" {{ request('month') == 10 ? 'selected' : '' }}>
+                            {{ __('components.months.10') }}
+                        </option>
+                        <option value="11" {{ request('month') == 11 ? 'selected' : '' }}>
+                            {{ __('components.months.11') }}
+                        </option>
+                        <option value="12" {{ request('month') == 12 ? 'selected' : '' }}>
+                            {{ __('components.months.12') }}
+                        </option>
                     </select>
                 </div>
                 <div>

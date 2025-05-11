@@ -8,6 +8,13 @@ return [
         'check_out_label'    => 'Check-out',
         'current_hash_label' => 'Current Hash',
         'save_changes'       => 'Save Changes',
+        'pause_start_label'         => 'Start Pause',
+        'pause_end_label'           => 'End Pause',
+        'ordinary_hours_label'      => 'Ordinary Hours',
+        'complementary_hours_label' => 'Complementary Hours',
+        'overtime_hours_label'      => 'Overtime Hours',
+        'pause_minutes_label'       => 'Pause Minutes',
+        'modification_reason_label' => 'Modification Reason',
     ],
 
     'index' => [
