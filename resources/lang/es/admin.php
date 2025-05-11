@@ -39,7 +39,7 @@ return [
         'button'      => 'Configurar',
     ],
 
-    // Textos específicos para usuarios (listado y ficha)
+    // Textos específicos para usuarios (listado, ficha y edición)
     'users' => [
         // Vista de listado (index)
         'list_title'          => 'Listado de Usuarios',
@@ -65,5 +65,40 @@ return [
             ],
             'work_logs_title' => 'Historial de Registros de Jornada',
         ],
+
+        // Vista de edición (edit)
+        'edit' => [
+            'header'        => 'Editar Usuario: :name',
+            'back_to_list'  => 'Volver al listado',
+            'info_title'    => 'Información del Usuario',
+            'form'          => [
+                'name'           => 'Nombre',
+                'email'          => 'Correo electrónico',
+                'role'           => 'Rol',
+                'contract_type'  => 'Tipo de Contrato',
+                'save_changes'   => 'Guardar cambios',
+                'options'        => [
+                    'user'      => 'Usuario',
+                    'admin'     => 'Administrador',
+                    'fulltime'  => 'Tiempo Completo',
+                    'parttime'  => 'Tiempo Parcial',
+                ],
+            ],
+            'schedule' => [
+                'title' => 'Horario de Trabajo',
+                'hours' => 'Horas asignadas',
+            ],
+        ],
+    ],
+
+    // Días de la semana
+    'weekdays' => [
+        'monday'    => 'Lunes',
+        'tuesday'   => 'Martes',
+        'wednesday' => 'Miércoles',
+        'thursday'  => 'Jueves',
+        'friday'    => 'Viernes',
+        'saturday'  => 'Sábado',
+        'sunday'    => 'Domingo',
     ],
 ];

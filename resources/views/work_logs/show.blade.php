@@ -10,7 +10,9 @@
 
     <!-- Contenido principal -->
     <div class="py-6">
-        <!-- Incluir el componente reutilizable -->
-        <x-work-log-detail :workLog="$workLog" :audits="$audits" />
+        @include('work_logs.partials.work-log-detail', [
+            'workLog' => $workLog, 
+            'audits'  => $audits
+        ])
     </div>
 </x-app-layout>

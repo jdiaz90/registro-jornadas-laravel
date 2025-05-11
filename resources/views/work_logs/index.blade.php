@@ -47,7 +47,10 @@
             </div>
 
             <!-- Componente de Historial de Registros con Filtros -->
-            <x-work-logs-table :logs="$logs" title="{{ __('work_logs.index.history_title') }}" />
+            @include('work_logs.partials.work-logs-table', [
+                'logs'   => $logs,
+                'title'  => __('work_logs.index.history_title'),
+            ])
         </div>
     </div>
 </x-app-layout>

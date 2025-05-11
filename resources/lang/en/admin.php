@@ -20,7 +20,7 @@ return [
     ],
     'global_statistics' => [
         'title'       => 'Global Statistics',
-        'description' => 'View relevant data and overall system statistics.',
+        'description' => 'View relevant data and comprehensive system statistics.',
         'button'      => 'View Statistics',
     ],
     'calendar' => [
@@ -39,7 +39,7 @@ return [
         'button'      => 'Configure',
     ],
 
-    // Specific texts for users (listing and show view)
+    // Specific texts for users (listing, show, and edit view)
     'users' => [
         // Listing view (index)
         'list_title'          => 'Users List',
@@ -51,7 +51,7 @@ return [
             'email'   => 'Email',
             'role'    => 'Role',
         ],
-        'empty'               => 'No users were found.',
+        'empty'               => 'No users found.',
 
         // Show view
         'show' => [
@@ -65,5 +65,40 @@ return [
             ],
             'work_logs_title' => 'Work Logs History',
         ],
+
+        // Edit view
+        'edit' => [
+            'header'        => 'Edit User: :name',
+            'back_to_list'  => 'Back to list',
+            'info_title'    => 'User Information',
+            'form'          => [
+                'name'           => 'Name',
+                'email'          => 'Email',
+                'role'           => 'Role',
+                'contract_type'  => 'Contract Type',
+                'save_changes'   => 'Save changes',
+                'options'        => [
+                    'user'      => 'User',
+                    'admin'     => 'Administrator',
+                    'fulltime'  => 'Full Time',
+                    'parttime'  => 'Part Time',
+                ],
+            ],
+            'schedule' => [
+                'title' => 'Work Schedule',
+                'hours' => 'Assigned Hours',
+            ],
+        ],
+    ],
+
+    // Weekdays
+    'weekdays' => [
+        'monday'    => 'Monday',
+        'tuesday'   => 'Tuesday',
+        'wednesday' => 'Wednesday',
+        'thursday'  => 'Thursday',
+        'friday'    => 'Friday',
+        'saturday'  => 'Saturday',
+        'sunday'    => 'Sunday',
     ],
 ];
