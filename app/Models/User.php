@@ -19,7 +19,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'locale', // Campo añadido para almacenar la localización del usuario
+        'locale', 
+        'role',
+        'contract_type'
     ];
 
     /**

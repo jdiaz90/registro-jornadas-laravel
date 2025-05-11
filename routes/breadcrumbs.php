@@ -41,7 +41,12 @@ Breadcrumbs::for('work_logs.index', function (BreadcrumbTrail $trail) {
 // REGISTRO DE JORNADA: ver detalle de un registro
 Breadcrumbs::for('work_logs.show', function (BreadcrumbTrail $trail, $workLog) {
     $trail->parent('work_logs.index');
-    // Se muestra el ID del registro; puedes ajustar la etiqueta según tus necesidades
+    
+    // Si $workLog no es un objeto, se asume que es el ID y se busca el modelo
+    if (!is_object($workLog)) {
+        $workLog = \App\Models\WorkLog::find($workLog);
+    }
+    
     $trail->push("Registro #{$workLog->id}", route('work_logs.show', $workLog));
 });
 
@@ -81,8 +86,15 @@ Breadcrumbs::for('admin.users.create', function (BreadcrumbTrail $trail) {
 // Administración de Usuarios – Mostrar detalle
 Breadcrumbs::for('admin.users.show', function (BreadcrumbTrail $trail, $user) {
     $trail->parent('admin.users.index');
+    
+    // Si $user no es un objeto, se asume que es el ID y se busca el modelo correspondiente
+    if (!is_object($user)) {
+        $user = \App\Models\User::find($user);
+    }
+    
     $trail->push($user->name, route('admin.users.show', $user));
 });
+
 
 // Administración de Usuarios – Editar
 Breadcrumbs::for('admin.users.edit', function (BreadcrumbTrail $trail, $user) {

@@ -85,40 +85,27 @@ class WorkLog extends Model
     public function calculateHours()
     {
         if (!$this->check_in || !$this->check_out) {
-            \Log::debug('calculateHours: Falta check_in o check_out', [
-                'check_in' => $this->check_in,
-                'check_out' => $this->check_out,
-            ]);
             return false;
         }
 
-        // Convertir check_in y check_out a Carbon
+        // Convertir check_in y check_out a instancias de Carbon
         $checkIn  = Carbon::parse($this->check_in);
         $checkOut = Carbon::parse($this->check_out);
-        
-        \Log::debug('calculateHours: Valores de checkIn y checkOut', [
-            'check_in'  => $checkIn->toDateTimeString(),
-            'check_out' => $checkOut->toDateTimeString()
-        ]);
 
-        // Calcular minutos de pausa:
+        // Calcular minutos de pausa y guardarlos en el campo pause_minutes si se definen pause_start y pause_end
         if ($this->pause_start && $this->pause_end) {
             $pauseMinutes = Carbon::parse($this->pause_start)
                 ->diffInMinutes(Carbon::parse($this->pause_end), true);
+            $this->pause_minutes = $pauseMinutes;
         } else {
             $pauseMinutes = $this->pause_minutes ?? 0;
         }
-        
-        \Log::debug('calculateHours: Minutos de pausa', ['pauseMinutes' => $pauseMinutes]);
 
         // Calcular los minutos trabajados netos restando la pausa
         $workedMinutes = $checkOut->diffInMinutes($checkIn, true) - $pauseMinutes;
-        
-        \Log::debug('calculateHours: Minutos trabajados netos', ['workedMinutes' => $workedMinutes]);
 
-        // Determinar el día de la semana (en minúsculas)
+        // Determinar el día de la semana en minúsculas
         $dayOfWeek = strtolower($checkIn->format('l'));
-        \Log::debug('calculateHours: Día de la semana', ['dayOfWeek' => $dayOfWeek]);
 
         // Valor por defecto de horas asignadas (7 horas)
         $defaultAssignedHours = 7;
@@ -127,63 +114,38 @@ class WorkLog extends Model
         $schedule = $this->user->workSchedule;
         if (!$schedule) {
             $assignedHours = $defaultAssignedHours;
-            \Log::debug('calculateHours: No se encontró workSchedule. Usando valor por defecto', ['assignedHours' => $assignedHours]);
         } else {
             $field = $dayOfWeek . '_hours';
-            $assignedHours = $schedule->$field ?? $defaultAssignedHours;
-            \Log::debug('calculateHours: Horario asignado obtenido del workSchedule', [
-                'field' => $field,
-                'assignedHours' => $assignedHours
-            ]);
+            // Si el campo no existe (null), se usa 0; si existe (aunque sea 0), se respeta su valor.
+            $assignedHours = $schedule->$field ?? 0;
         }
 
-        // Convertir horas asignadas a minutos.
+        // Convertir horas asignadas a minutos
         $assignedMinutes = $assignedHours * 60;
-        \Log::debug('calculateHours: Minutos asignados', ['assignedMinutes' => $assignedMinutes]);
 
         // Tipo de contrato (por defecto "fulltime")
         $contractType = $this->user->contract_type ?? 'fulltime';
-        \Log::debug('calculateHours: Tipo de contrato', ['contractType' => $contractType]);
 
         // Calcular horas según lo trabajado
         if ($workedMinutes <= $assignedMinutes) {
             $this->ordinary_hours      = round($workedMinutes / 60, 2);
             $this->complementary_hours = 0;
             $this->overtime_hours      = 0;
-            \Log::debug('calculateHours: Tiempo trabajado menor o igual a lo asignado', [
-                'ordinary_hours' => $this->ordinary_hours
-            ]);
         } else {
             $this->ordinary_hours = round($assignedMinutes / 60, 2);
             $extraMinutes = $workedMinutes - $assignedMinutes;
-            \Log::debug('calculateHours: Tiempo extra calculado', ['extraMinutes' => $extraMinutes]);
 
             if ($contractType === 'fulltime') {
-                $this->overtime_hours = round($extraMinutes / 60, 2);
+                $this->overtime_hours      = round($extraMinutes / 60, 2);
                 $this->complementary_hours = 0;
-                \Log::debug('calculateHours: fulltime - Horas extra asignadas', [
-                    'overtime_hours' => $this->overtime_hours
-                ]);
             } else {
                 $this->complementary_hours = round($extraMinutes / 60, 2);
-                $this->overtime_hours = 0;
-                \Log::debug('calculateHours: parttime - Horas complementarias asignadas', [
-                    'complementary_hours' => $this->complementary_hours
-                ]);
+                $this->overtime_hours      = 0;
             }
         }
 
-        // Registrar log final antes de guardar
-        \Log::debug('calculateHours: Valores finales asignados', [
-            'ordinary_hours'      => $this->ordinary_hours,
-            'complementary_hours' => $this->complementary_hours,
-            'overtime_hours'      => $this->overtime_hours,
-            'hash'                => $this->generateHash()
-        ]);
-
         return $this->save();
     }
-
 
     /**
      * Compara los valores actuales del modelo con los datos recibidos.
