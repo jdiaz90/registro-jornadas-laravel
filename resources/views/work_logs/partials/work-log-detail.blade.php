@@ -8,7 +8,22 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <!-- Usuario -->
             <div>
-                <strong>{{ __('components.work_log_detail.label.user') }}:</strong> {{ $workLog->user->name ?? 'N/A' }}
+                <strong>{{ __('components.work_log_detail.label.user') }}:</strong>
+                @if(Auth::check())
+                    @if(Auth::id() == $workLog->user->id)
+                        <a href="{{ route('profile.edit') }}" class="text-blue-600 hover:underline">
+                            {{ $workLog->user->name ?? 'N/A' }}
+                        </a>
+                    @elseif(Auth::user()->role === 'admin')
+                        <a href="{{ route('admin.users.show', $workLog->user->id) }}" class="text-blue-600 hover:underline">
+                            {{ $workLog->user->name ?? 'N/A' }}
+                        </a>
+                    @else
+                        {{ $workLog->user->name ?? 'N/A' }}
+                    @endif
+                @else
+                    {{ $workLog->user->name ?? 'N/A' }}
+                @endif
             </div>
             <!-- Hash, con texto pequeño y wrap -->
             <div>
@@ -106,9 +121,6 @@
                                     @if($audit->old_check_out !== $audit->new_check_out)
                                         <div>{{ __('components.work_log_detail.label.check_out') }}</div>
                                     @endif
-                                    @if($audit->old_hash !== $audit->new_hash)
-                                        <div>{{ __('components.work_log_detail.label.hash') }}</div>
-                                    @endif
                                     @if($audit->old_pause_start !== $audit->new_pause_start)
                                         <div>{{ __('components.work_log_detail.label.pause_start') }}</div>
                                     @endif
@@ -127,6 +139,9 @@
                                     @if($audit->old_pause_minutes !== $audit->new_pause_minutes)
                                         <div>{{ __('components.work_log_detail.label.pause_minutes') }}</div>
                                     @endif
+                                    @if($audit->old_hash !== $audit->new_hash)
+                                        <div>{{ __('components.work_log_detail.label.hash') }}</div>
+                                    @endif
                                 </td>
                                 <!-- Valores antiguos -->
                                 <td class="px-4 py-2 whitespace-nowrap">
@@ -140,12 +155,6 @@
                                         <div>
                                             <strong>{{ __('components.work_log_detail.label.check_out') }}:</strong>
                                             {{ $audit->old_check_out ?? '-' }}
-                                        </div>
-                                    @endif
-                                    @if($audit->old_hash !== $audit->new_hash)
-                                        <div>
-                                            <strong>{{ __('components.work_log_detail.label.hash') }}:</strong>
-                                            {{ $audit->old_hash ?? '-' }}
                                         </div>
                                     @endif
                                     @if($audit->old_pause_start !== $audit->new_pause_start)
@@ -184,6 +193,12 @@
                                             {{ $audit->old_pause_minutes ?? '-' }}
                                         </div>
                                     @endif
+                                    @if($audit->old_hash !== $audit->new_hash)
+                                        <div>
+                                            <strong>{{ __('components.work_log_detail.label.hash') }}:</strong>
+                                            {{ $audit->old_hash ?? '-' }}
+                                        </div>
+                                    @endif
                                 </td>
                                 <!-- Valores nuevos -->
                                 <td class="px-4 py-2 whitespace-nowrap">
@@ -197,12 +212,6 @@
                                         <div>
                                             <strong>{{ __('components.work_log_detail.label.check_out') }}:</strong>
                                             {{ $audit->new_check_out ?? '-' }}
-                                        </div>
-                                    @endif
-                                    @if($audit->old_hash !== $audit->new_hash)
-                                        <div>
-                                            <strong>{{ __('components.work_log_detail.label.hash') }}:</strong>
-                                            {{ $audit->new_hash ?? '-' }}
                                         </div>
                                     @endif
                                     @if($audit->old_pause_start !== $audit->new_pause_start)
@@ -241,12 +250,18 @@
                                             {{ $audit->new_pause_minutes ?? '-' }}
                                         </div>
                                     @endif
+                                    @if($audit->old_hash !== $audit->new_hash)
+                                        <div>
+                                            <strong>{{ __('components.work_log_detail.label.hash') }}:</strong>
+                                            {{ $audit->new_hash ?? '-' }}
+                                        </div>
+                                    @endif
                                 </td>
                                 <!-- Updated by -->
                                 <td class="px-4 py-2 whitespace-nowrap">
                                     {{ $audit->updated_by }}
                                 </td>
-                                <!-- Nueva columna: Comentario de la modificación -->
+                                <!-- Columna para el comentario -->
                                 <td class="px-4 py-2 whitespace-nowrap">
                                     {{ $audit->modification_reason ?? '-' }}
                                 </td>

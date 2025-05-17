@@ -15,6 +15,7 @@ return [
         'overtime_hours_label'      => 'Overtime Hours',
         'pause_minutes_label'       => 'Pause Minutes',
         'modification_reason_label' => 'Modification Reason',
+        'char_count'   => ':count/:max characters',
     ],
 
     'index' => [

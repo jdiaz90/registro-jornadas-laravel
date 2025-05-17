@@ -15,6 +15,17 @@ class WorkLogObserver
      */
     public function updating(WorkLog $workLog)
     {
+        // Si el registro no estaba completo (es decir, si check_out era null)
+        // entonces se trata de la transición al registro completo y no se genera auditoría.
+        if (is_null($workLog->getOriginal('check_out'))) {
+            return;
+        }
+
+        // Se asegura que el registro esté completo antes de continuar con el audit
+        if (!$workLog->check_in || !$workLog->check_out) {
+            return;
+        }
+
         // Obtenemos el array de campos modificados
         $dirty = $workLog->getDirty();
 
@@ -30,7 +41,7 @@ class WorkLogObserver
             array_key_exists('overtime_hours', $dirty) ||
             array_key_exists('pause_minutes', $dirty)
         ) {
-            // Registramos la auditoría, incluyendo los valores antiguos y nuevos de todos los campos relevantes
+            // Se registra la auditoría solo cuando se trata de modificaciones en un registro ya completo
             WorkLogAudit::create([
                 'work_log_id'             => $workLog->id,
                 'old_check_in'            => $workLog->getOriginal('check_in'),
@@ -52,8 +63,10 @@ class WorkLogObserver
                 'new_pause_end'           => $workLog->pause_end,
                 'old_pause_minutes'       => $workLog->getOriginal('pause_minutes') ?? 0,
                 'new_pause_minutes'       => $workLog->pause_minutes ?? 0,
-                'modification_reason'     => $workLog->temp_modification_reason, // Lee la propiedad temporal
+                'modification_reason'     => $workLog->temp_modification_reason, // Lectura de la propiedad temporal
             ]);
         }
     }
+
+
 }
