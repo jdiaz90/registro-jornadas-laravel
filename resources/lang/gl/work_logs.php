@@ -15,7 +15,9 @@ return [
         'overtime_hours_label'      => 'Horas extras',
         'pause_minutes_label'       => 'Minutos da pausa',
         'modification_reason_label' => 'Motivo da modificación',
-        'char_count' => ':count/:max caracteres',    
+        'char_count' => ':count/:max caracteres',
+        'time_fields_title'       => 'Datos de tempo',
+        'hour_fields_title'       => 'Horas calculadas',    
     ],
 
     'index' => [

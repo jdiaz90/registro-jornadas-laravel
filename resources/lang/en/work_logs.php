@@ -16,6 +16,8 @@ return [
         'pause_minutes_label'       => 'Pause Minutes',
         'modification_reason_label' => 'Modification Reason',
         'char_count'   => ':count/:max characters',
+        'time_fields_title'       => 'Time Fields',
+        'hour_fields_title'       => 'Calculated Hours',
     ],
 
     'index' => [

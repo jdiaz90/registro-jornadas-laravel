@@ -35,6 +35,9 @@
                             <th class="px-4 py-2 text-left text-sm font-medium text-gray-700 dark:text-gray-200">
                                 {{ __('admin.users.table.role') }}
                             </th>
+                            <th class="px-4 py-2 text-left text-sm font-medium text-gray-700 dark:text-gray-200">
+                                {{ __('admin.users.table.actions') }}
+                            </th>
                         </tr>
                     </thead>
                     <tbody class="bg-white dark:bg-gray-700 divide-y divide-gray-200 dark:divide-gray-600">
@@ -56,10 +59,21 @@
                                 <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
                                     {{ $user->role }}
                                 </td>
+                                <!-- Columna de Acciones -->
+                                <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
+                                    <!-- Espacio para futuras acciones -->
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500 hover:text-blue-700 cursor-pointer"
+                                        fill="none" viewBox="0 0 20 20" stroke="currentColor"
+                                        onclick="window.location='{{ route('admin.users.edit', $user) }}'"
+                                        title="{{ __('admin.users.edit_tooltip') }}">
+                                        <path d="M17.414 3.586a2 2 0 00-2.828 0L3 15.172V17h1.828l11.586-11.586a2 2 0 000-2.828zM2 18a1 1 0 001 1h4.586a1 1 0 000-2H3a1 1 0 00-1 1z"/>
+
+                                    </svg>
+                                </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="4" class="px-4 py-2 text-center text-sm text-gray-600 dark:text-gray-300">
+                                <td colspan="5" class="px-4 py-2 text-center text-sm text-gray-600 dark:text-gray-300">
                                     {{ __('admin.users.empty') }}
                                 </td>
                             </tr>

@@ -66,8 +66,11 @@ return [
             'name'  => 'Nome',
             'email' => 'Correo',
             'role'  => 'Rol',
+            'actions' => 'Accións',
         ],
         'empty'               => 'Non se atoparon utilizadores.',
+        'edit'               => 'Editar',
+        'edit_tooltip'       => 'Editar usuario',
 
         // Vista de ficha (show)
         'show' => [

@@ -66,8 +66,11 @@ return [
             'name'  => 'Name',
             'email' => 'Email',
             'role'  => 'Role',
+            'actions' => 'Actions',
         ],
         'empty'               => 'No users found.',
+        'edit'               => 'Edit',
+        'edit_tooltip'       => 'Edit user',
 
         // Show view
         'show' => [
