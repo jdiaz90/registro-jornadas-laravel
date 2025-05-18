@@ -7,7 +7,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\WorkLogController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\AdminDashboardController;
-use App\Http\Controllers\AdminUserController; // Nuevo controlador para usuarios
+use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\WorkLogAuditController;
 use App\Http\Controllers\WorkLogVerificationController;
 use App\Http\Controllers\LocaleController;
@@ -38,19 +38,23 @@ Route::middleware(['auth', 'locale'])->group(function () {
     Route::post('/work-logs/check-out', [WorkLogController::class, 'checkOut'])->name('work_logs.check_out');
     Route::get('/work-logs/{workLog}', [WorkLogController::class, 'show'])->name('work_logs.show');
     Route::get('/work-logs/export/{year}', [WorkLogController::class, 'exportYearlyReport'])->name('worklogs.export.yearly');
-
+    
     Route::get('/calendar', [CalendarController::class, 'index'])->name('calendar.index');
 
     // Rutas para verificar la autenticidad de un WorkLog
     Route::get('/verify-worklog', [WorkLogVerificationController::class, 'showForm'])->name('work_logs.verify');
     Route::post('/verify-worklog', [WorkLogVerificationController::class, 'verify'])->name('work_logs.verify.process');
 
+    // Rutas para iniciar y finalizar pausas
+    Route::post('/work-logs/pause-start', [WorkLogController::class, 'pauseStart'])->name('work_logs.pause_start');
+    Route::post('/work-logs/pause-end', [WorkLogController::class, 'pauseEnd'])->name('work_logs.pause_end');
+
     // Rutas de administración (solo para administradores)
     Route::middleware(['admin'])->prefix('admin')->name('admin.')->group(function () {
         // Dashboard administrativo
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
-        // Rutas para la administración de usuarios usando AdminUserController
+        // Rutas para la administración de usuarios
         Route::prefix('users')->name('users.')->group(function () {
             Route::get('/', [AdminUserController::class, 'index'])->name('index');
             Route::get('/create', [AdminUserController::class, 'create'])->name('create');
@@ -60,7 +64,7 @@ Route::middleware(['auth', 'locale'])->group(function () {
             Route::put('/{user}', [AdminUserController::class, 'update'])->name('update');
         });
 
-        // Rutas de administración para editar Work Logs
+        // Rutas de administración para Work Logs
         Route::get('/work-logs/{work_log}/edit', [WorkLogController::class, 'edit'])->name('work_logs.edit');
         Route::put('/work-logs/{work_log}', [WorkLogController::class, 'update'])->name('work_logs.update');
 

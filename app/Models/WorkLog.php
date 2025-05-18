@@ -84,69 +84,80 @@ class WorkLog extends Model
      */
     public function calculateHours()
     {
+        // Validar que existan tanto check_in como check_out
         if (!$this->check_in || !$this->check_out) {
             return false;
         }
 
         // Convertir check_in y check_out a instancias de Carbon
-        $checkIn  = Carbon::parse($this->check_in);
-        $checkOut = Carbon::parse($this->check_out);
+        $checkIn  = \Carbon\Carbon::parse($this->check_in);
+        $checkOut = \Carbon\Carbon::parse($this->check_out);
 
-        // Calcular minutos de pausa y guardarlos en el campo pause_minutes si se definen pause_start y pause_end
+        // Calcular los minutos de pausa usando abs() para asegurarse de que son positivos
         if ($this->pause_start && $this->pause_end) {
-            $pauseMinutes = Carbon::parse($this->pause_start)
-                ->diffInMinutes(Carbon::parse($this->pause_end), true);
-            $this->pause_minutes = $pauseMinutes;
+            $pauseStart = \Carbon\Carbon::parse($this->pause_start);
+            $pauseEnd   = \Carbon\Carbon::parse($this->pause_end);
+            $pauseMinutes = abs($pauseStart->diffInMinutes($pauseEnd));
+            $this->pause_minutes = (int) $pauseMinutes;
         } else {
-            $pauseMinutes = $this->pause_minutes ?? 0;
+            $pauseMinutes = isset($this->pause_minutes) ? $this->pause_minutes : 0;
         }
 
-        // Calcular los minutos trabajados netos restando la pausa
+        // Calcular los minutos trabajados netos: diferencia entre check_in y check_out menos la pausa
+        // Se utiliza el parámetro true para obtener la diferencia con signo, pero lo forzamos a ser no negativo
         $workedMinutes = $checkOut->diffInMinutes($checkIn, true) - $pauseMinutes;
+        
+        // Si la resta resulta negativa, forzamos el valor a 0
+        if ($workedMinutes < 0) {
+            $workedMinutes = 0;
+        }
 
-        // Determinar el día de la semana en minúsculas
-        $dayOfWeek = strtolower($checkIn->format('l'));
+        // Forzar que se use el nombre del día en inglés para buscar en el WorkSchedule
+        $dayOfWeek = strtolower($checkIn->locale('en')->isoFormat('dddd'));
 
-        // Valor por defecto de horas asignadas (7 horas)
+        // Valor por defecto asignado en horas
         $defaultAssignedHours = 7;
-
-        // Obtener el horario asignado al usuario para ese día
         $schedule = $this->user->workSchedule;
         if (!$schedule) {
             $assignedHours = $defaultAssignedHours;
         } else {
             $field = $dayOfWeek . '_hours';
-            // Si el campo no existe (null), se usa 0; si existe (aunque sea 0), se respeta su valor.
-            $assignedHours = $schedule->$field ?? 0;
+            $assignedHours = $schedule->$field ?? $defaultAssignedHours;
+            // Si es domingo y el schedule tiene 0, se usa el valor por defecto
+            if ($dayOfWeek === 'sunday' && $assignedHours == 0) {
+                $assignedHours = $defaultAssignedHours;
+            }
         }
-
-        // Convertir horas asignadas a minutos
+        
+        // Convertir las horas asignadas a minutos
         $assignedMinutes = $assignedHours * 60;
 
-        // Tipo de contrato (por defecto "fulltime")
+        // Obtener el tipo de contrato del usuario (por defecto "fulltime")
         $contractType = $this->user->contract_type ?? 'fulltime';
 
-        // Calcular horas según lo trabajado
+        // Calcular la distribución de horas según si se excede o no lo asignado
         if ($workedMinutes <= $assignedMinutes) {
-            $this->ordinary_hours      = round($workedMinutes / 60, 2);
+            $this->ordinary_hours = round($workedMinutes / 60, 2);
             $this->complementary_hours = 0;
-            $this->overtime_hours      = 0;
+            $this->overtime_hours = 0;
         } else {
+            // Se asignan las horas ordinarias hasta el límite
             $this->ordinary_hours = round($assignedMinutes / 60, 2);
             $extraMinutes = $workedMinutes - $assignedMinutes;
-
             if ($contractType === 'fulltime') {
-                $this->overtime_hours      = round($extraMinutes / 60, 2);
+                $this->overtime_hours = round($extraMinutes / 60, 2);
                 $this->complementary_hours = 0;
             } else {
                 $this->complementary_hours = round($extraMinutes / 60, 2);
-                $this->overtime_hours      = 0;
+                $this->overtime_hours = 0;
             }
         }
 
         return $this->save();
     }
 
+    
+    
     /**
      * Compara los valores actuales del modelo con los datos recibidos.
      *

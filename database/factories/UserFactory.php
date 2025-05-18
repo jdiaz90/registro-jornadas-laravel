@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\User;
+use App\Models\WorkSchedule;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -24,14 +25,11 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
-        // Forzamos la creación del objeto Faker con el locale 'en_US'
+        // Forzamos la creación del objeto Faker con el locale 'es_ES'
         $this->faker = \Faker\Factory::create('es_ES');
-        // Opcional: agregar el provider de Person, aunque normalmente no es necesario
-        // $this->faker->addProvider(new \Faker\Provider\en_US\Person($this->faker));
-    
         return [
-            'name'              => $this->faker->name(), // Llamada al método name()
-            'email'             => $this->faker->unique()->safeEmail(), // Con paréntesis
+            'name'              => $this->faker->name(), 
+            'email'             => $this->faker->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password'          => static::$password ??= Hash::make('password'),
             'remember_token'    => Str::random(10),
@@ -41,7 +39,6 @@ class UserFactory extends Factory
             'contract_type'     => $this->faker->randomElement(['fulltime', 'parttime']),
         ];
     }
-    
 
     /**
      * Indicate that the model's email address should be unverified.
@@ -51,5 +48,18 @@ class UserFactory extends Factory
         return $this->state(fn(array $attributes) => [
             'email_verified_at' => null,
         ]);
+    }
+    
+    /**
+     * Configurar la fábrica para que, después de crear un usuario,
+     * se genere automáticamente su WorkSchedule asociado, si no existe.
+     */
+    public function configure(): static
+    {
+        return $this->afterCreating(function (User $user) {
+            if (!$user->workSchedule) {
+                WorkSchedule::factory()->create(['user_id' => $user->id]);
+            }
+        });
     }
 }

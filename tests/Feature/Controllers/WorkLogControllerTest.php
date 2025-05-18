@@ -14,22 +14,26 @@ uses(Tests\TestCase::class, RefreshDatabase::class)->in('Feature');
 | WorkLogControllerTest
 |--------------------------------------------------------------------------
 |
-| A continuación se realizan pruebas sobre los distintos métodos
-| del WorkLogController:
+| En este archivo se realizan pruebas sobre los distintos métodos del 
+| WorkLogController:
 |
-| 1. index()             → Listado de logs (con o sin filtros)
-| 2. checkIn()           → Registro de entrada
-| 3. checkOut()          → Registro de salida
-| 4. edit()              → Formulario de edición (para admin)
-| 5. show()              → Mostrar detalle (para owner o admin; en otro caso aborta 403)
-| 6. update()            → Actualización de registros de log
-| 7. exportYearlyReport()→ Exportación de un reporte anual en Excel
+|  1. index()               → Listado de logs (con y sin filtros)
+|  2. checkIn()             → Registro de entrada
+|  3. checkOut()            → Registro de salida (incluyendo la finalización 
+|                             automática de la pausa si está abierta)
+|  4. edit()                → Formulario de edición (para admin)
+|  5. show()                → Mostrar detalle (para owner o admin; de lo 
+|                             contrario aborta 403)
+|  6. update()              → Actualización de registros de log
+|  7. exportYearlyReport()  → Exportación de reporte anual en Excel
+|  8. Gestión de pausas:
+|         - pauseStart()    → Iniciar la pausa
+|         - pauseEnd()      → Finalizar la pausa
 |
 */
 
 /** INDEX **/
 it('muestra los work logs del usuario autenticado en index', function () {
-    // Creamos un usuario y algunos registros para ese usuario y para otros
     $user = User::factory()->create();
     WorkLog::factory()->count(3)->create(['user_id' => $user->id]);
     WorkLog::factory()->count(2)->create(); // logs de otros usuarios
@@ -39,7 +43,6 @@ it('muestra los work logs del usuario autenticado en index', function () {
 
     $response->assertStatus(200);
     $response->assertViewIs('work_logs.index');
-    // Verificamos que todos los logs sean del usuario autenticado.
     $response->assertViewHas('logs', function ($logs) use ($user) {
         return $logs->getCollection()->every(fn($log) => $log->user_id === $user->id);
     });
@@ -49,7 +52,6 @@ it('filtra los work logs en index por año y mes', function () {
     $user = User::factory()->create();
     $this->actingAs($user);
 
-    // Creamos logs en distintas fechas
     WorkLog::factory()->create([
        'user_id'   => $user->id,
        'check_in'  => '2025-05-15 09:00:00',
@@ -69,7 +71,6 @@ it('filtra los work logs en index por año y mes', function () {
     $response = $this->get('/work-logs?year=2025&month=5');
     $response->assertStatus(200);
     $response->assertViewHas('logs', function ($logs) {
-        // Dado que se usa paginate() y no get(), accedemos a la colección interna.
         return $logs->getCollection()->every(fn($log) => date('n', strtotime($log->check_in)) == 5);
     });
 });
@@ -79,7 +80,6 @@ it('permite registrar el check-in si no hay log abierto', function () {
     $user = User::factory()->create();
     $this->actingAs($user);
 
-    // No debe existir log abierto (check_out nulo)
     $response = $this->post('/work-logs/check-in');
     $response->assertSessionHas('success');
 
@@ -90,7 +90,6 @@ it('retorna error en check-in si ya hay un log abierto', function () {
     $user = User::factory()->create();
     $this->actingAs($user);
 
-    // Creamos un log abierto (check_in asignado y check_out nulo)
     WorkLog::factory()->create([
         'user_id'  => $user->id,
         'check_in' => Carbon::now(),
@@ -126,8 +125,7 @@ it('retorna error en check-out si no hay log abierto', function () {
 });
 
 /** EDIT **/
-it('muestra el formulario de edición para un work log (edit) si el usuario es administrador', function () {
-    // La ruta de edición se define en el grupo admin: '/admin/work-logs/{work_log}/edit'
+it('muestra el formulario de edición de un work log para admin', function () {
     $admin = User::factory()->create(['role' => 'admin']);
     $this->actingAs($admin);
 
@@ -141,12 +139,10 @@ it('muestra el formulario de edición para un work log (edit) si el usuario es a
 
 /** SHOW **/
 it('muestra el detalle de un work log en show si el usuario es el dueño', function () {
-    // Para el método show la ruta es '/work-logs/{id}'
     $user = User::factory()->create();
     $this->actingAs($user);
 
     $workLog = WorkLog::factory()->create(['user_id' => $user->id]);
-    // Creamos algunos registros de auditoría asociados a este work log
     WorkLogAudit::factory()->count(2)->create(['work_log_id' => $workLog->id]);
 
     $response = $this->get("/work-logs/{$workLog->id}");
@@ -156,9 +152,9 @@ it('muestra el detalle de un work log en show si el usuario es el dueño', funct
     $response->assertViewHas('audits', fn($audits) => $audits->count() > 0);
 });
 
-it('retorna 403 en show si el usuario no es admin ni el dueño del work log', function () {
-    $owner = User::factory()->create();
-    $other = User::factory()->create(); // Usuario que no es admin ni dueño
+it('retorna 403 en show si el usuario no es admin ni el dueño', function () {
+    $owner = User::factory()->create(['role' => 'user']); // Usuario propietario con rol "user"
+    $other = User::factory()->create(['role' => 'user']); // Usuario no admin ni propietario
 
     $workLog = WorkLog::factory()->create(['user_id' => $owner->id]);
     $this->actingAs($other);
@@ -169,7 +165,6 @@ it('retorna 403 en show si el usuario no es admin ni el dueño del work log', fu
 
 /** UPDATE **/
 it('actualiza un work log en update si se realizan cambios', function () {
-    // La actualización es gestionada en el grupo admin: ruta PUT '/admin/work-logs/{work_log}'
     $admin = User::factory()->create(['role' => 'admin']);
     $this->actingAs($admin);
 
@@ -184,7 +179,6 @@ it('actualiza un work log en update si se realizan cambios', function () {
          'pause_minutes' => 0,
     ]);
 
-    // Enviamos datos distintos para actualizar; por ejemplo, cambiamos check_in
     $newCheckIn = '2025-02-02 08:30:00';
     $data = [
         'check_in'            => $newCheckIn,
@@ -220,7 +214,6 @@ it('retorna error en update si no se detectan cambios', function () {
          'pause_minutes' => 0,
     ]);
 
-    // Enviamos exactamente los mismos datos que se tienen actualmente
     $existingCheckIn = Carbon::parse($workLog->check_in)->format('Y-m-d\TH:i');
     $existingCheckOut = Carbon::parse($workLog->check_out)->format('Y-m-d\TH:i');
 
@@ -238,12 +231,10 @@ it('retorna error en update si no se detectan cambios', function () {
 
     $response = $this->put("/admin/work-logs/{$workLog->id}", $data);
     $response->assertSessionHas('error');
-
 });
 
 /** EXPORT YEARLY REPORT **/
 it('exporta el reporte anual en Excel', function () {
-    // Finge la descarga usando Excel::fake().
     Excel::fake();
 
     $user = User::factory()->create();
@@ -255,4 +246,119 @@ it('exporta el reporte anual en Excel', function () {
     Excel::assertDownloaded("work_logs_{$year}.xlsx", function ($export) use ($year) {
         return $export->getYear() == $year;
     });
+});
+
+/** TESTS PARA LA GESTIÓN DE PAUSAS **/
+// Test para iniciar pausa correctamente
+it('permite iniciar una pausa si hay un log abierto y la pausa no está iniciada', function () {
+    $user = User::factory()->create();
+    $this->actingAs($user);
+
+    $log = WorkLog::factory()->create([
+        'user_id'     => $user->id,
+        'check_in'    => Carbon::now()->subHour(),
+        'check_out'   => null,
+        'pause_start' => null,
+        'pause_end'   => null,
+    ]);
+
+    $response = $this->post('/work-logs/pause-start');
+    $response->assertSessionHas('success');
+    $log->refresh();
+    expect($log->pause_start)->not->toBeNull();
+});
+
+// Test para error al iniciar pausa sin log abierto
+it('retorna error al intentar iniciar una pausa si no hay log abierto', function () {
+    $user = User::factory()->create();
+    $this->actingAs($user);
+
+    $response = $this->post('/work-logs/pause-start');
+    $response->assertSessionHas('error');
+});
+
+// Test para error al iniciar pausa si ya está en curso
+it('retorna error al intentar iniciar una pausa si ya se inició y no se finalizó', function () {
+    $user = User::factory()->create();
+    $this->actingAs($user);
+
+    $log = WorkLog::factory()->create([
+        'user_id'     => $user->id,
+        'check_in'    => Carbon::now()->subHours(2),
+        'check_out'   => null,
+        'pause_start' => Carbon::now()->subMinutes(30),
+        'pause_end'   => null,
+    ]);
+
+    $response = $this->post('/work-logs/pause-start');
+    $response->assertSessionHas('error');
+});
+
+// Test para finalizar pausa correctamente
+it('permite finalizar una pausa si ya se inició', function () {
+    $user = User::factory()->create();
+    $this->actingAs($user);
+
+    $log = WorkLog::factory()->create([
+        'user_id'     => $user->id,
+        'check_in'    => Carbon::now()->subHours(2),
+        'check_out'   => null,
+        'pause_start' => Carbon::now()->subMinutes(30),
+        'pause_end'   => null,
+    ]);
+
+    $response = $this->post('/work-logs/pause-end');
+    $response->assertSessionHas('success');
+    $log->refresh();
+    expect($log->pause_end)->not->toBeNull();
+    expect($log->pause_minutes)->toBeInt();
+});
+
+// Test para error al finalizar pausa sin log abierto
+it('retorna error al intentar finalizar una pausa si no hay log abierto', function () {
+    $user = User::factory()->create();
+    $this->actingAs($user);
+
+    $response = $this->post('/work-logs/pause-end');
+    $response->assertSessionHas('error');
+});
+
+// Test para error al finalizar pausa sin haberla iniciado
+it('retorna error al intentar finalizar una pausa si no se ha iniciado', function () {
+    $user = User::factory()->create();
+    $this->actingAs($user);
+
+    $log = WorkLog::factory()->create([
+        'user_id'     => $user->id,
+        'check_in'    => Carbon::now()->subHour(),
+        'check_out'   => null,
+        'pause_start' => null,
+        'pause_end'   => null,
+    ]);
+
+    $response = $this->post('/work-logs/pause-end');
+    $response->assertSessionHas('error');
+});
+
+// Test para finalización automática de pausa en check-out
+it('finaliza automáticamente la pausa al registrar el check-out si la pausa está abierta', function () {
+    $user = User::factory()->create();
+    $this->actingAs($user);
+
+    $log = WorkLog::factory()->create([
+        'user_id'     => $user->id,
+        'check_in'    => Carbon::now()->subHours(2),
+        'check_out'   => null,
+        'pause_start' => Carbon::now()->subMinutes(45),
+        'pause_end'   => null,
+    ]);
+
+    $response = $this->post('/work-logs/check-out');
+    $response->assertSessionHas('success');
+
+    $log->refresh();
+    expect($log->check_out)->not->toBeNull();
+    expect($log->pause_end)->not->toBeNull();
+    expect($log->pause_minutes)->toBeInt();
+    expect($log->pause_minutes)->toBeGreaterThanOrEqual(0);
 });

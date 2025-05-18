@@ -40,20 +40,32 @@ class WorkLogController extends Controller
     // Registrar la entrada
     public function checkIn(Request $request)
     {
-        // Verificamos que el usuario no tenga un registro en curso.
-        $openLog = WorkLog::where('user_id', Auth::id())
+        $userId = Auth::id();
+    
+        // Verificamos que el usuario no tenga un registro abierto (sin check‑out)
+        $openLog = WorkLog::where('user_id', $userId)
             ->whereNull('check_out')
             ->first();
-
+    
         if ($openLog) {
             return back()->with('error', __('work_logs.messages.check_in.already_open'));
         }
-
+    
+        // Verificamos que no exista ya un registro para el día de hoy (comparando solo la fecha)
+        $todayRegister = WorkLog::where('user_id', $userId)
+            ->whereDate('check_in', Carbon::today())
+            ->first();
+    
+        if ($todayRegister) {
+            return back()->with('error', __('work_logs.messages.check_in.already_today'));
+        }
+    
+        // Si pasa ambas validaciones, creamos el registro de entrada.
         WorkLog::create([
-            'user_id'  => Auth::id(),
+            'user_id'  => $userId,
             'check_in' => Carbon::now(),
         ]);
-
+    
         return back()->with('success', __('work_logs.messages.check_in.success'));
     }
 
@@ -65,23 +77,80 @@ class WorkLogController extends Controller
             ->where('user_id', Auth::id())
             ->whereNull('check_out')
             ->first();
-
+    
         if (!$log) {
             return back()->with('error', __('work_logs.messages.check_out.no_open'));
         }
-
-        // Actualiza la fecha de check_out
+    
+        // Si existe una pausa iniciada sin finalizar, finalízala automáticamente.
+        if ($log->pause_start && is_null($log->pause_end)) {
+            $log->pause_end = Carbon::now();
+            $log->pause_minutes = $log->pause_end->diffInMinutes($log->pause_start);
+        }
+    
+        // Registrar la salida
         $log->check_out = Carbon::now();
-
+    
         // Recalcula las horas y guarda el registro
         if (!$log->calculateHours()) {
-            return back()->with('error', 'No se pudieron calcular las horas correctamente.');
+            return back()->with('error', __('work_logs.messages.hours_calculation_error'));
         }
-
+    
         return back()->with('success', __('work_logs.messages.check_out.success'));
     }
 
-    
+    // Nuevo método: Iniciar Pausa
+    public function pauseStart(Request $request)
+    {
+        $userId = Auth::id();
+
+        // Buscar el registro abierto para el usuario (donde 'check_out' es nulo)
+        $workLog = WorkLog::where('user_id', $userId)
+            ->whereNull('check_out')
+            ->latest('check_in')
+            ->first();
+
+        if (!$workLog) {
+            return back()->with('error', __('work_logs.messages.pause.start.no_active_log'));
+        }
+
+        // Si ya se ha registrado una pausa (independientemente de si se finalizó o no),
+        // no se permite iniciar otra pausa.
+        if (!is_null($workLog->pause_start)) {
+            return back()->with('error', __('work_logs.messages.pause.start.already_started'));
+        }
+
+        // Iniciar la pausa estableciendo la hora actual en 'pause_start'
+        $workLog->pause_start = Carbon::now();
+        $workLog->save();
+
+        return back()->with('success', __('work_logs.messages.pause.start.success'));
+    }
+
+    // Nuevo método: Finalizar Pausa
+    public function pauseEnd(Request $request)
+    {
+        // Buscar el registro abierto del usuario.
+        $log = WorkLog::where('user_id', Auth::id())
+            ->whereNull('check_out')
+            ->first();
+
+        if (!$log) {
+            return back()->with('error', __('work_logs.messages.pause.end.no_active_log'));
+        }
+
+        // Verifica que ya se haya iniciado una pausa y que no se haya finalizado.
+        if (!$log->pause_start || $log->pause_end) {
+            return back()->with('error', __('work_logs.messages.pause.end.not_started'));
+        }
+
+        // Registrar el final de la pausa.
+        $log->pause_end = Carbon::now();
+        $log->pause_minutes = (int)$log->pause_end->diffInMinutes($log->pause_start);
+        $log->save();
+
+        return back()->with('success', __('work_logs.messages.pause.end.success'));
+    }
 
     // Muestra el formulario para que el administrador edite el registro.
     public function edit($id)
@@ -90,6 +159,7 @@ class WorkLogController extends Controller
         return view('work_logs.edit', compact('workLog'));
     }
 
+    // Mostrar detalle de un registro
     public function show($id)
     {
         // Obtenemos el registro junto con la relación "user".
@@ -110,36 +180,36 @@ class WorkLogController extends Controller
     // Procesa la actualización realizada por el administrador.
     public function update(UpdateWorkLogRequest $request, $id)
     {
-        // Se obtienen los datos validados
+        // Se obtienen los datos validados.
         $validated = $request->validated();
         
-        // Buscamos el registro
+        // Buscamos el registro.
         $workLog = WorkLog::findOrFail($id);
 
-        // Si los datos que llegan son idénticos a los existentes, se informa sin proceder a actualizar
+        // Si los datos que llegan son idénticos a los existentes, se informa sin proceder a actualizar.
         if (!$workLog->hasDataChanges($validated)) {
             return redirect()->route('admin.work_logs.edit', $id)
                 ->with('error', __('work_logs.messages.update.no_changes'));
         }
 
-        // Extraemos el motivo de modificación
+        // Extraemos el motivo de modificación.
         $modificationReason = $validated['modification_reason'];
-        // Eliminamos esa llave del array para actualizar el registro
+        // Eliminamos esa llave del array para actualizar el registro.
         $data = $validated;
         unset($data['modification_reason']);
 
-        // Actualizamos el modelo con los datos validados
+        // Actualizamos el modelo con los datos validados.
         $workLog->fill($data);
-        // Asignamos el motivo en una propiedad temporal (para auditoría o registro)
+        // Asignamos el motivo en una propiedad temporal (para auditoría o registro).
         $workLog->temp_modification_reason = $modificationReason;
 
-        // Llamamos explícitamente a calculateHours() para actualizar los campos de horas y guardar el registro
+        // Llamamos explícitamente a calculateHours() para actualizar los campos de horas y guardar el registro.
         if (!$workLog->calculateHours()) {
             return redirect()->route('admin.work_logs.edit', $id)
-                ->with('error', 'No se pudieron calcular las horas correctamente.');
+                ->with('error', __('work_logs.messages.hours_calculation_error'));
         }
 
-        // Retornamos a la vista de detalle con un mensaje de éxito
+        // Retornamos a la vista de detalle con un mensaje de éxito.
         return redirect()->route('work_logs.show', $workLog->id)
             ->with('success', __('work_logs.messages.update.success'));
     }
