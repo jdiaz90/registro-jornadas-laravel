@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Validator;
 use App\Models\WorkLog;
 use App\Models\WorkLogAudit;
 use App\Models\User;
@@ -17,26 +18,46 @@ class WorkLogController extends Controller
     // Mostrar el estado actual del usuario o los registros anteriores
     public function index(Request $request)
     {
+        // Creamos el validador con las reglas básicas para que, si se envían, sean fechas válidas,
+        // y que end_date sea después o igual que start_date.
+        $validator = Validator::make($request->all(), [
+            'start_date' => 'nullable|date',
+            'end_date'   => 'nullable|date|after_or_equal:start_date',
+        ]);
+
+        // Agregamos un error manual si se ha ingresado solo uno de los campos
+        if ($request->filled('start_date') && !$request->filled('end_date')) {
+            $validator->errors()->add('end_date', __('work_logs.messages.required_date_pair'));
+        }
+        if ($request->filled('end_date') && !$request->filled('start_date')) {
+            $validator->errors()->add('start_date', __('work_logs.messages.required_date_pair'));
+        }
+
+        // Si hay errores de validación, redirige de vuelta con los errores y los inputs
+        if ($validator->errors()->any()) {
+            return redirect()->back()
+                            ->withErrors($validator)
+                            ->withInput();
+        }
+
         // Inicia la consulta para el usuario autenticado.
         $query = WorkLog::where('user_id', Auth::id());
 
-        // Si se ingresa un año, filtra por ese año
-        if ($request->filled('year')) {
-            $query->whereYear('check_in', $request->year);
-            
-            // Si adicionalmente se ha seleccionado un mes, filtra por ese mes
-            if ($request->filled('month')) {
-                $query->whereMonth('check_in', $request->month);
-            }
+        // Si se han enviado ambas fechas, se filtra por el rango.
+        if ($request->filled('start_date') && $request->filled('end_date')) {
+            $startDate = Carbon::parse($request->input('start_date'))->startOfDay();
+            $endDate   = Carbon::parse($request->input('end_date'))->endOfDay();
+            $query->whereBetween('check_in', [$startDate, $endDate]);
         }
 
-        // Ordena por fecha de creación descendente y aplica la paginación
+        // Ordena por 'check_in' de forma descendente y aplica la paginación.
         $logs = $query->orderBy('check_in', 'desc')
-                      ->paginate(30)
-                      ->withQueryString();
+                    ->paginate(30)
+                    ->withQueryString();
 
         return view('work_logs.index', compact('logs'));
     }
+
 
     public function adminIndex(Request $request)
     {

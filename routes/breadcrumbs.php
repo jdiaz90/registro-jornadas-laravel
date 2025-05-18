@@ -91,7 +91,7 @@ Breadcrumbs::for('admin.users.edit', function (BreadcrumbTrail $trail, $user) {
 
 // Administración de Registros de Jornada – Editar
 Breadcrumbs::for('admin.work_logs.edit', function (BreadcrumbTrail $trail, $workLog) {
-    $trail->parent('admin.dashboard');
+    $trail->parent('admin.work_logs.index');
     $trail->push(__('breadcrumbs.admin_work_logs_edit'), route('admin.work_logs.edit', $workLog));
 });
 

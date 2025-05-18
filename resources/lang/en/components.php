@@ -43,6 +43,8 @@ return [
             'label_user'       => 'User',
             'option_all'       => 'All',
             'button_filter'    => 'Filter',
+            'label_month'      => 'Month',
+            'label_year'       => 'Year',
         ],
         'table' => [
             'id'                  => 'ID',
