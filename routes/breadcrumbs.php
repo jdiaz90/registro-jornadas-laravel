@@ -95,6 +95,13 @@ Breadcrumbs::for('admin.work_logs.edit', function (BreadcrumbTrail $trail, $work
     $trail->push(__('breadcrumbs.admin_work_logs_edit'), route('admin.work_logs.edit', $workLog));
 });
 
+// Administración de Registros de Jornada – Listado
+Breadcrumbs::for('admin.work_logs.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.dashboard');
+    $trail->push(__('breadcrumbs.admin_work_logs_index'), route('admin.work_logs.index'));
+});
+
+
 // Auditorías de Registros de Jornada (índice)
 Breadcrumbs::for('admin.work_log_audits.index', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.dashboard');

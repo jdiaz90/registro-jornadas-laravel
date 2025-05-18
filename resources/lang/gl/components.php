@@ -12,8 +12,8 @@ return [
             'hash'                => 'Hash',
             'check_in'            => 'Entrada',
             'check_out'           => 'Saída',
-            'pause_start'         => 'Inicio Pausa',
-            'pause_end'           => 'Fin Pausa',
+            'pause_start'         => 'Inicio de Pausa',
+            'pause_end'           => 'Fin de Pausa',
             'ordinary_hours'      => 'Horas Ordinarias',
             'complementary_hours' => 'Horas Complementarias',
             'overtime_hours'      => 'Horas Extras',
@@ -26,7 +26,7 @@ return [
         'audit_empty'          => 'Non se atoparon alteracións para este rexistro.',
         'table' => [
             'date'            => 'Data',
-            'modified_fields' => 'Campo(s) Modificado',
+            'modified_fields' => 'Campo(s) Modificado(s)',
             'old_value'       => 'Valor Anterior',
             'new_value'       => 'Valor Novo',
             'updated_by'      => 'Actualizado Por',
@@ -34,33 +34,43 @@ return [
         'edit_button'  => 'Editar Rexistro',
         'print_button' => 'Imprimir Rexistro',
     ],
-    
+
     'work_logs_table' => [
         'title' => 'Historial de Rexistros',
         'filter' => [
-            'label_month'   => 'Mes',
-            'label_year'    => 'Ano',
-            'button_filter' => 'Filtrar',
-            'option_all'    => 'Todos',
+            'label_start_date' => 'Data de inicio',
+            'label_end_date'   => 'Data de fin',
+            'label_user'       => 'Utilizador',
+            'option_all'       => 'Todos',
+            'button_filter'    => 'Filtrar',
         ],
         'table' => [
             'id'                  => 'ID',
+            'user'                => 'Utilizador',
             'check_in'            => 'Entrada',
             'check_out'           => 'Saída',
-            'pause_start'         => 'Inicio Pausa',
-            'pause_end'           => 'Fin Pausa',
+            'pause_start'         => 'Inicio de Pausa',
+            'pause_end'           => 'Fin de Pausa',
             'ordinary_hours'      => 'Horas Ordinarias',
             'complementary_hours' => 'Horas Complementarias',
             'overtime_hours'      => 'Horas Extras',
             'pause_minutes'       => 'Minutos de Pausa',
             'hash'                => 'Hash',
-            'no_records'          => 'Aínda non hai rexistros.',
+            'no_records'          => 'Non se atoparon rexistros.',
         ],
         'ongoing' => 'En curso',
         'pending' => 'Pendente',
     ],
-    
-    // Etiquetas para os meses (gallego)
+
+    'work_logs' => [
+        'messages' => [
+            'invalid_date_range' => 'A data de inicio non pode ser posterior á data de fin.',
+            'required_date_pair' => 'Debe introducir ambos valores, data de inicio e data de fin, para filtrar o rango.',
+            'authorization'      => 'Non ten permiso para ver estes rexistros.',
+        ],
+    ],
+
+    // Etiquetas para os meses
     'months' => [
         '1'  => 'Xaneiro',
         '2'  => 'Febreiro',
@@ -75,6 +85,4 @@ return [
         '11' => 'Novembro',
         '12' => 'Decembro',
     ],
-
-    // Aquí podes engadir traduccións para outros compoñentes a futuro
 ];

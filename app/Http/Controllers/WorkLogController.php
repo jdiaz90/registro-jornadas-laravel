@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use App\Models\WorkLog;
 use App\Models\WorkLogAudit;
+use App\Models\User;
 use App\Exports\YearlyWorkLogsExport;
 use App\Http\Requests\UpdateWorkLogRequest;
 use Maatwebsite\Excel\Facades\Excel;
@@ -36,6 +37,53 @@ class WorkLogController extends Controller
 
         return view('work_logs.index', compact('logs'));
     }
+
+    public function adminIndex(Request $request)
+    {
+        // Validar la solicitud asegurando que, si se ingresa una fecha, se ingrese ambas
+        $validated = $request->validate([
+            'start_date' => ['nullable', 'date', 'required_with:end_date'],
+            'end_date'   => ['nullable', 'date', 'required_with:start_date', 'after_or_equal:start_date'],
+            'user'       => ['nullable', 'exists:users,id'],
+        ], [
+            'end_date.after_or_equal' => __('work_logs.messages.invalid_date_range'),
+            'start_date.required_with' => __('work_logs.messages.required_date_pair'),
+            'end_date.required_with'   => __('work_logs.messages.required_date_pair'),
+        ]);
+
+        // Verificar que el usuario autenticado es administrador
+        if (Auth::user()->role !== 'admin') {
+            abort(403, __('work_logs.messages.authorization.unauthorized'));
+        }
+
+        // Construir la consulta de Work Logs
+        $query = WorkLog::query();
+
+        // Filtrar por rango de fechas si se proporcionan ambas
+        if ($request->filled('start_date') && $request->filled('end_date')) {
+            $startDate = Carbon::parse($validated['start_date'])->startOfDay();
+            $endDate   = Carbon::parse($validated['end_date'])->endOfDay();
+
+            $query->whereBetween('check_in', [$startDate, $endDate]);
+        }
+
+        // Filtrar por usuario si se proporciona
+        if ($request->filled('user')) {
+            $query->where('user_id', $validated['user']);
+        }
+
+        // Obtener los registros ordenados por check-in descendente
+        $logs = $query->orderBy('check_in', 'desc')
+                    ->paginate(30)
+                    ->withQueryString();
+
+        // Obtener la lista de usuarios para el filtro
+        $users = User::orderBy('name')->get();
+
+        return view('admin.work_logs.index', compact('logs', 'users'));
+    }
+
+ 
 
     // Registrar la entrada
     public function checkIn(Request $request)

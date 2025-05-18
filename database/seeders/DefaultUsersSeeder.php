@@ -36,8 +36,8 @@ class DefaultUsersSeeder extends Seeder
             'wednesday_hours'        => 7,
             'thursday_hours'         => 7,
             'friday_hours'           => 7,
-            'saturday_hours'         => 0,
-            'sunday_hours'           => 0,
+            'saturday_hours'         => 7,
+            'sunday_hours'           => 7,
         ]);
         $bar->advance();
 
@@ -59,8 +59,8 @@ class DefaultUsersSeeder extends Seeder
             'wednesday_hours'        => 7,
             'thursday_hours'         => 7,
             'friday_hours'           => 7,
-            'saturday_hours'         => 0,
-            'sunday_hours'           => 0,
+            'saturday_hours'         => 7,
+            'sunday_hours'           => 7,
         ]);
         $bar->advance();
 

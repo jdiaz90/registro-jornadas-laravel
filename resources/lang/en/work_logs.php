@@ -87,6 +87,8 @@ return [
     // Messages used, for example, in the controller
     'messages' => [
         'hours_calculation_error' => 'Hours could not be calculated correctly.',
+        'invalid_date_range' => 'The start date cannot be later than the end date.',
+        'required_date_pair' => 'You must enter both the start and end date to filter the range.',
         // Messages related to check-in
         'check_in' => [
             'already_open'  => 'You have already registered a check-in and have not completed check-out.',

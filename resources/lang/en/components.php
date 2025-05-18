@@ -38,13 +38,15 @@ return [
     'work_logs_table' => [
         'title' => 'Work Log History',
         'filter' => [
-            'label_month'   => 'Month',
-            'label_year'    => 'Year',
-            'button_filter' => 'Filter',
-            'option_all'    => 'All',
+            'label_start_date' => 'Start Date',
+            'label_end_date'   => 'End Date',
+            'label_user'       => 'User',
+            'option_all'       => 'All',
+            'button_filter'    => 'Filter',
         ],
         'table' => [
             'id'                  => 'ID',
+            'user'                => 'User',
             'check_in'            => 'Check-in',
             'check_out'           => 'Check-out',
             'pause_start'         => 'Start Pause',
@@ -54,13 +56,21 @@ return [
             'overtime_hours'      => 'Overtime Hours',
             'pause_minutes'       => 'Pause Minutes',
             'hash'                => 'Hash',
-            'no_records'          => 'No records yet.',
+            'no_records'          => 'No records found.',
         ],
         'ongoing' => 'Ongoing',
         'pending' => 'Pending',
     ],
 
-    // Labels for the months
+    'work_logs' => [
+        'messages' => [
+            'invalid_date_range' => 'The start date cannot be later than the end date.',
+            'required_date_pair' => 'You must enter both the start and end date to filter the range.',
+            'authorization'      => 'You do not have permission to view these records.',
+        ],
+    ],
+
+    // Month labels
     'months' => [
         '1'  => 'January',
         '2'  => 'February',
@@ -75,6 +85,4 @@ return [
         '11' => 'November',
         '12' => 'December',
     ],
-
-    // You can add translations for other components in the future
 ];

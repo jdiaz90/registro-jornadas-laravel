@@ -15,4 +15,5 @@ return [
     'admin_users_edit'  => 'Editar',
     'admin_work_logs_edit'  => 'Editar Registro de Jornada',
     'admin_work_log_audits_index' => 'Auditorías de Registros de Jornada',
+    'admin_work_logs_index' => 'Historial de registros de jornada',
 ];

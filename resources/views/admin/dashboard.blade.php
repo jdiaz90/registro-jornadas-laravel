@@ -53,12 +53,13 @@
                     <p class="text-gray-600 dark:text-gray-300">
                         {{ __('admin.work_logs.description') }}
                     </p>
-                    <a href="{{ route('work_logs.index') }}">
+                    <a href="{{ route('admin.work_logs.index') }}">
                         <x-primary-button class="mt-4 bg-yellow-600 hover:bg-yellow-700">
                             {{ __('admin.work_logs.button') }}
                         </x-primary-button>
                     </a>
                 </div>
+
 
                 <!-- Tarjeta: Calendario -->
                 <div class="bg-white dark:bg-gray-700 shadow rounded-lg p-6 text-center">

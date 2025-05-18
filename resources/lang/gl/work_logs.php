@@ -87,6 +87,8 @@ return [
     // Mensaxes utilizadas no controlador
     'messages' => [
         'hours_calculation_error' => 'Non se puideron calcular correctamente as horas.',
+        'invalid_date_range' => 'A data de inicio non pode ser posterior á data final.',
+        'required_date_pair' => 'Debe introducir ambos valores, data de inicio e data de fin, para filtrar o rango.',
         // Mensaxes relacionadas co rexistro de entrada
         'check_in' => [
             'already_open'  => 'Xa rexistraches unha entrada e non completaches a saída.',

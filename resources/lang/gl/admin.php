@@ -29,6 +29,9 @@ return [
             'modification_reason_label' => 'Motivo da modificación',
         ],
     ],
+    'page_titles' => [
+        'admin_work_logs_index' => 'Historial de rexistros de xornada',    
+    ],
     'global_statistics' => [
         'title'       => 'Estatísticas Globais',
         'description' => 'Mostra datos relevantes e totais do sistema.',

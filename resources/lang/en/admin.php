@@ -29,6 +29,9 @@ return [
             'modification_reason_label' => 'Modification Reason',
         ],
     ],
+    'page_titles' => [
+        'admin_work_logs_index' => 'Work Log History',    
+    ],
     'global_statistics' => [
         'title'       => 'Global Statistics',
         'description' => 'View relevant data and comprehensive system statistics.',
