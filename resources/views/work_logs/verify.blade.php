@@ -35,24 +35,34 @@
             <div class="bg-white shadow sm:rounded-lg p-6">
                 <form action="{{ route('work_logs.verify.process') }}" method="POST">
                     @csrf
-            
+
                     <div class="mb-4">
-                        <label for="work_log_id" class="block text-gray-700 font-bold">
-                            {{ __('work_logs.verify.form.id_label') }}
-                        </label>
-                        <input type="number" name="work_log_id" id="work_log_id" value="{{ old('work_log_id') }}" class="w-full border rounded p-2" placeholder="{{ __('work_logs.verify.form.id_placeholder') }}">
+                        <x-input-label for="work_log_id" value="{{ __('work_logs.verify.form.id_label') }}" />
+                        <x-text-input
+                            id="work_log_id"
+                            type="number"
+                            name="work_log_id"
+                            :value="old('work_log_id')"
+                            class="w-full border rounded p-2"
+                            placeholder="{{ __('work_logs.verify.form.id_placeholder') }}"
+                        />
                     </div>
 
                     <div class="mb-4">
-                        <label for="hash_code" class="block text-gray-700 font-bold">
-                            {{ __('work_logs.verify.form.hash_label') }}
-                        </label>
-                        <input type="text" name="hash_code" id="hash_code" value="{{ old('hash_code') }}" class="w-full border rounded p-2" placeholder="{{ __('work_logs.verify.form.hash_placeholder') }}">
+                        <x-input-label for="hash_code" value="{{ __('work_logs.verify.form.hash_label') }}" />
+                        <x-text-input
+                            id="hash_code"
+                            type="text"
+                            name="hash_code"
+                            :value="old('hash_code')"
+                            class="w-full border rounded p-2"
+                            placeholder="{{ __('work_logs.verify.form.hash_placeholder') }}"
+                        />
                     </div>
 
-                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                    <x-primary-button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
                         {{ __('work_logs.verify.form.button') }}
-                    </button>
+                    </x-primary-button>
                 </form>
             </div>
         </div>

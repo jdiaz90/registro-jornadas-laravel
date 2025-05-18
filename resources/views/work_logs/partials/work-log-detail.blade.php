@@ -8,22 +8,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <!-- Usuario -->
             <div>
-                <strong>{{ __('components.work_log_detail.label.user') }}:</strong>
-                @if(Auth::check())
-                    @if(Auth::id() == $workLog->user->id)
-                        <a href="{{ route('profile.edit') }}" class="text-blue-600 hover:underline">
-                            {{ $workLog->user->name ?? 'N/A' }}
-                        </a>
-                    @elseif(Auth::user()->role === 'admin')
-                        <a href="{{ route('admin.users.show', $workLog->user->id) }}" class="text-blue-600 hover:underline">
-                            {{ $workLog->user->name ?? 'N/A' }}
-                        </a>
-                    @else
-                        {{ $workLog->user->name ?? 'N/A' }}
-                    @endif
-                @else
-                    {{ $workLog->user->name ?? 'N/A' }}
-                @endif
+                <strong>{{ __('components.work_log_detail.label.user') }}:</strong> {{ $workLog->user->name ?? 'N/A' }}
             </div>
             <!-- Hash, con texto pequeño y wrap -->
             <div>
@@ -279,15 +264,22 @@
 
     <!-- Bloque de botones (Editar e Imprimir) -->
     <div class="flex flex-col sm:flex-row gap-4 mt-4">
-        @if(Auth::check() && Auth::user()->role === 'admin')
-            <a href="{{ route('admin.work_logs.edit', $workLog->id) }}"
-               class="w-full sm:w-1/2 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-center">
-                {{ __('components.work_log_detail.edit_button') }}
-            </a>
-        @endif
-        <button type="button" onclick="window.print()"
-                class="w-full sm:w-1/2 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded text-center">
+    @if(Auth::check() && Auth::user()->role === 'admin')
+        <!-- Botón de edición usando el componente primary-button con atributo href -->
+        <x-primary-button 
+            href="{{ route('admin.work_logs.edit', $workLog->id) }}" 
+            class="w-full sm:w-1/2 text-center">
+            {{ __('components.work_log_detail.edit_button') }}
+        </x-primary-button>
+    @endif
+
+        <!-- Botón para imprimir -->
+        <x-primary-button 
+            type="button" 
+            onclick="window.print()" 
+            class="w-full sm:w-1/2 text-center bg-green-600 hover:bg-green-700">
             {{ __('components.work_log_detail.print_button') }}
-        </button>
+        </x-primary-button>
     </div>
+
 </div>

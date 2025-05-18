@@ -35,14 +35,12 @@
 
                     <!-- Campo: Nombre -->
                     <div class="mb-4">
-                        <label for="name" class="block text-sm font-bold text-gray-700">
-                            {{ __('admin.users.edit.form.name') }}
-                        </label>
-                        <input 
+                        <x-input-label for="name" value="{{ __('admin.users.edit.form.name') }}" />
+                        <x-text-input 
+                            id="name" 
+                            name="name" 
                             type="text"
-                            id="name"
-                            name="name"
-                            value="{{ old('name', $user->name) }}"
+                            :value="old('name', $user->name)" 
                             class="mt-1 block w-full border border-gray-300 rounded-md"
                             required
                         />
@@ -51,16 +49,14 @@
                         @enderror
                     </div>
 
-                    <!-- Campo: Correo Electrónico -->
+                    <!-- Campo: Correo Electr\u00F3nico -->
                     <div class="mb-4">
-                        <label for="email" class="block text-sm font-bold text-gray-700">
-                            {{ __('admin.users.edit.form.email') }}
-                        </label>
-                        <input 
+                        <x-input-label for="email" value="{{ __('admin.users.edit.form.email') }}" />
+                        <x-text-input 
+                            id="email" 
+                            name="email" 
                             type="email"
-                            id="email"
-                            name="email"
-                            value="{{ old('email', $user->email) }}"
+                            :value="old('email', $user->email)" 
                             class="mt-1 block w-full border border-gray-300 rounded-md"
                             required
                         />
@@ -73,9 +69,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <!-- Campo: Rol -->
                         <div class="mb-4">
-                            <label for="role" class="block text-sm font-bold text-gray-700">
-                                {{ __('admin.users.edit.form.role') }}
-                            </label>
+                            <x-input-label for="role" value="{{ __('admin.users.edit.form.role') }}" />
                             <select id="role" name="role" class="mt-1 block w-full border border-gray-300 rounded-md" required>
                                 <option value="user" {{ old('role', $user->role) == 'user' ? 'selected' : '' }}>
                                     {{ __('admin.users.edit.form.options.user') }}
@@ -91,9 +85,7 @@
 
                         <!-- Campo: Tipo de Contrato -->
                         <div class="mb-4">
-                            <label for="contract_type" class="block text-sm font-bold text-gray-700">
-                                {{ __('admin.users.edit.form.contract_type') }}
-                            </label>
+                            <x-input-label for="contract_type" value="{{ __('admin.users.edit.form.contract_type') }}" />
                             <select id="contract_type" name="contract_type" class="mt-1 block w-full border border-gray-300 rounded-md" required>
                                 <option value="fulltime" {{ old('contract_type', $user->contract_type) == 'fulltime' ? 'selected' : '' }}>
                                     {{ __('admin.users.edit.form.options.fulltime') }}
@@ -110,9 +102,9 @@
                     
                     <!-- Sección: Horario de Trabajo (solo horas) -->
                     @php
-                        // Array con las claves de los días
+                        // Array con las claves de los d\u00EDas
                         $weekdayKeys = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
-                        // Si el usuario tiene un workSchedule, se usará; en caso contrario, se mostrará vacío.
+                        // Si el usuario tiene un workSchedule, se usar\u00E1; en caso contrario, se mostrar\u00E1 vac\u00EDo.
                         $schedule = $user->workSchedule;
                     @endphp
 
@@ -123,13 +115,11 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             @foreach($weekdayKeys as $dayKey)
                                 <div class="mb-4">
-                                    <label class="block text-sm font-bold text-gray-700">
-                                        {{ __('admin.weekdays.' . $dayKey) }} - {{ __('admin.users.edit.schedule.hours') }}
-                                    </label>
-                                    <input 
+                                    <x-input-label value="{{ __('admin.weekdays.' . $dayKey) }} - {{ __('admin.users.edit.schedule.hours') }}" />
+                                    <x-text-input 
                                         type="number" 
                                         name="work_schedule[{{ $dayKey }}_hours]" 
-                                        value="{{ old("work_schedule.{$dayKey}_hours", isset($schedule) ? $schedule->{$dayKey . '_hours'} : '') }}"
+                                        :value="old('work_schedule.' . $dayKey . '_hours', isset($schedule) ? $schedule->{$dayKey . '_hours'} : '')" 
                                         min="0" max="24"
                                         class="mt-1 block w-full border border-gray-300 rounded-md"
                                         required
@@ -144,10 +134,11 @@
 
                     <!-- Botón para Guardar Cambios -->
                     <div class="mt-6">
-                        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                        <x-primary-button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
                             {{ __('admin.users.edit.form.save_changes') }}
-                        </button>
+                        </x-primary-button>
                     </div>
+
                 </form>
             </div>
         </div>

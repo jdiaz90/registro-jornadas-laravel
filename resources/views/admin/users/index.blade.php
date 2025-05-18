@@ -9,12 +9,19 @@
             <!-- Formulario de búsqueda -->
             <div class="bg-white dark:bg-gray-700 shadow rounded-lg p-6">
                 <form action="{{ route('admin.users.index') }}" method="GET" class="flex flex-col sm:flex-row items-center gap-4">
-                    <input type="text" name="search" value="{{ request('search') }}" 
-                           placeholder="{{ __('admin.users.search_placeholder') }}"
-                           class="w-full sm:w-96 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:border-blue-500">
-                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded">
+                    <x-text-input 
+                        type="text" 
+                        name="search" 
+                        :value="request('search')" 
+                        placeholder="{{ __('admin.users.search_placeholder') }}"
+                        class="w-full sm:w-96 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:border-blue-500"
+                    />
+                    <x-primary-button 
+                        type="submit" 
+                        class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded"
+                    >
                         {{ __('admin.users.search_button') }}
-                    </button>
+                    </x-primary-button>
                 </form>
             </div>
 
